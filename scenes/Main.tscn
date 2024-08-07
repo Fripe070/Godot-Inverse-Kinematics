@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://5o1x2u3d0nfv"]
+[gd_scene load_steps=11 format=3 uid="uid://5o1x2u3d0nfv"]
 
 [ext_resource type="PackedScene" uid="uid://d1rf8jxqx2lvx" path="res://scenes/Player.tscn" id="1_mykwi"]
+[ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_6ra64"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tm7ks"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -26,6 +27,8 @@ size = Vector2(16, 16)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_0e4of"]
 data = PackedVector3Array(0, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0.5, -0.5, 0.5, 0, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, -0.5, -0.5, -0.5, 0, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
+[sub_resource type="BoxMesh" id="BoxMesh_jf1v0"]
+
 [node name="Node3D" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -37,6 +40,8 @@ shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_mykwi")]
 auto_jump = true
+friction = 1000.0
+stop_speed = 1.0
 dash_speed = 16.0
 dash_up_mult = 0.75
 slide_friction = 0.0
@@ -58,3 +63,28 @@ mesh = SubResource("PrismMesh_pbnib")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_0e4of")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-7.03998, -0.597658, -1.63914, 4.54468, -2.03546, 0, -7.70732, -0.654312, 1.49721, 8.38526, -0.0548432, 11.4208)
+mesh = SubResource("PrismMesh_pbnib")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0e4of")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.70956, 0, 1.28405, 0, 0.855, 0, -1.46284, 0, 1.50061, 4.6818, 2.628, 7.35543)
+mesh = SubResource("BoxMesh_jf1v0")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0e4of")
+
+[node name="Limb" parent="." node_paths=PackedStringArray("_targetObject") instance=ExtResource("2_6ra64")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8207, 0.268248, 1.35091)
+_destinationOffset = Vector3(15, 0.795, 6.98)
+_segmentCount = 8
+_segmentLength = 1.0
+_targetObject = NodePath("../Player")

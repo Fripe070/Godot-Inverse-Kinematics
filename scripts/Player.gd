@@ -33,7 +33,7 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @export_group("Quirky Movement")
 @export var bhop_tick_window: int = 2
-@export var coyote_ticks: int = 0.1 * 60
+@export var coyote_ticks: int = 6
 
 @export_group("Dash")
 @export var dash_count: int = 1
@@ -101,8 +101,8 @@ func crouch(crouch_state: bool) -> void:
 	crouching = crouch_state
 	
 	var initial_height: float = collider.shape.height
-	collider.shape.height = standing_height * (crouch_height_mult if crouching else 1)
-	display.mesh.height = standing_height * (crouch_height_mult if crouching else 1)
+	collider.shape.height = standing_height * (crouch_height_mult if crouching else 1.0)
+	display.mesh.height = standing_height * (crouch_height_mult if crouching else 1.0)
 	
 	var height_delta: float = (initial_height - display.mesh.height) / 2
 	neck.position -= up_direction * height_delta * .5
@@ -196,7 +196,7 @@ func apply_friction() -> void:
 
 func tick_movement() -> void:
 	# Amalgimation of AirMove and GroundMove functions
-	var old_velocity = velocity
+	#var old_velocity = velocity
 	#is_on_ground = is_on_floor()
 	
 	# https://www.ryanliptak.com/blog/rampsliding-quake-engine-quirk/#what-about-surfing-like-in-counter-strike-surf-maps
@@ -214,7 +214,7 @@ func tick_movement() -> void:
 	accelerate(input_dir, max_speed, acceleration)
 	velocity.y -= gravity * gravity_mult * timedelta
 	
-	var wish_jump: bool = false
+	#var wish_jump: bool = false
 	if auto_jump:
 		wish_jump = Input.is_action_pressed(&"jump")
 	else:
@@ -246,7 +246,10 @@ func on_takeoff() -> void:
 	coyote = true
 	pass
 
-func _physics_process(delta):
+var debug_meshes: Array[MeshInstance3D]
+
+#func _physics_process(delta):
+func _process(delta):
 	timedelta = delta
 	
 	
@@ -276,10 +279,8 @@ func _physics_process(delta):
 	#debug_meshes.append(Draw3d.line(position, position+Vector3(velocity.x, 0, velocity.z), Color.PURPLE))
 	#debug_meshes.append(Draw3d.line(position, position+velocity, Color.PURPLE))
 	
-var debug_meshes: Array[MeshInstance3D]
-	
 
-func _process(delta):
+#func _process(delta):
 	if Input.is_action_just_pressed(&"third_person"):
 		third_person = not third_person
 	camera.position.z = 5 if third_person else 0

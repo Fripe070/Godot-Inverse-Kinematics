@@ -15,10 +15,6 @@ run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-Draw3d="*res://scripts/Draw3d.gd"
-
 [dotnet]
 
 project/assembly_name="Kinematics"
