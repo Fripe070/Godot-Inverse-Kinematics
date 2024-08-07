@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://d1rf8jxqx2lvx"]
+
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_tnwjw"]
+[ext_resource type="PackedScene" uid="uid://bi545qlj5mtfm" path="res://scenes/hud.tscn" id="2_2n7lr"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i860k"]
+radius = 0.35
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4yle5"]
+lightmap_size_hint = Vector2i(12, 13)
+radius = 0.35
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("collider", "display")]
+script = ExtResource("1_tnwjw")
+collider = NodePath("CollisionShape3D")
+display = NodePath("CollisionShape3D/MeshInstance3D")
+gravity_mult = 1.05
+low_friction_time = 3.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_i860k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_4yle5")
+skeleton = NodePath("../..")
+
+[node name="Neck" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Camera" type="Camera3D" parent="Neck"]
+
+[node name="Hud" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_2n7lr")]
+player = NodePath("..")
