@@ -274,7 +274,7 @@ func _physics_process(delta):
 	#debug_meshes.append(Draw3d.line(position, position+Vector3(velocity.x, 0, velocity.z), Color.PALE_VIOLET_RED))
 	#move_and_slide()
 	#debug_meshes.append(Draw3d.line(position, position+Vector3(velocity.x, 0, velocity.z), Color.PURPLE))
-	debug_meshes.append(Draw3d.line(position, position+velocity, Color.PURPLE))
+	#debug_meshes.append(Draw3d.line(position, position+velocity, Color.PURPLE))
 	
 var debug_meshes: Array[MeshInstance3D]
 	
