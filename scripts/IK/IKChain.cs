@@ -7,7 +7,7 @@ namespace Kinematics.scripts.IK;
 
 public class IKChainOptions
 {
-    public float Tolerance = 0.001f;
+    public float Tolerance = 0.01f;
     public int MaxIterations = 10;
     public bool PrioritiseEnd = true;
     public bool StraightIfTooFar = true;
@@ -42,7 +42,7 @@ public class IKChain
         _options = options ?? new IKChainOptions();
     }
     
-    // TODO: When StraightIfTooFar is false, and the target becomes too far away, the chain does a weird snapping motion
+    // TODO: When StraightIfTooFar is false, and the target becomes too far away, the chain does a weird snapping motion. Gets reduced if steps are increased
     public double SolveTo(Vector3 target)
     {
         _lastTarget = target;

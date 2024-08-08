@@ -25,8 +25,6 @@ public partial class Limb : Node3D
     {
         var chainOptions = new IKChainOptions
         {
-            // PrioritiseEnd = true,
-            // StraightIfTooFar = false
         };
         _chain = new IKChain(GlobalPosition, _segmentLength, _segmentCount, chainOptions);
         _renderer = new DebugRenderer();
