@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://5o1x2u3d0nfv"]
 
 [ext_resource type="PackedScene" uid="uid://d1rf8jxqx2lvx" path="res://scenes/Player.tscn" id="1_mykwi"]
-[ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_6ra64"]
+[ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_v5hmt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tm7ks"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -38,7 +38,8 @@ environment = SubResource("Environment_b6qus")
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." instance=ExtResource("1_mykwi")]
+[node name="Player" parent="." node_paths=PackedStringArray("controlled_limbs") instance=ExtResource("1_mykwi")]
+controlled_limbs = [NodePath("../Limb")]
 auto_jump = true
 friction = 1000.0
 stop_speed = 1.0
@@ -82,5 +83,5 @@ mesh = SubResource("BoxMesh_jf1v0")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_0e4of")
 
-[node name="Limb" parent="." instance=ExtResource("2_6ra64")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43682, 1.02511, -4.64229)
+[node name="Limb" parent="." instance=ExtResource("2_v5hmt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.7, -1)

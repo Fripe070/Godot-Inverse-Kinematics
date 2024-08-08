@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://doe7p80kpuljs"]
+
+[ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="1_hf5ho"]
+[ext_resource type="Script" path="res://scripts/old/Foot.cs" id="2_vjx4b"]
+
+[node name="Leg" type="Node3D"]
+
+[node name="Limb" parent="." instance=ExtResource("1_hf5ho")]
+
+[node name="Foot" type="Node3D" parent="." node_paths=PackedStringArray("_limb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+script = ExtResource("2_vjx4b")
+_limb = NodePath("../Limb")
+
+[node name="RayCast3D" type="RayCast3D" parent="Foot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+target_position = Vector3(0, -10, 0)

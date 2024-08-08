@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Kinematics.scenes;
+namespace Kinematics.scripts.old;
 
 [Tool]
 public partial class LimbEditorRenderer : Node3D

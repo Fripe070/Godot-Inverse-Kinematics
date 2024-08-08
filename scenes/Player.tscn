@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://d1rf8jxqx2lvx"]
 
-[ext_resource type="Script" path="res://scripts/Player.gd" id="1_tnwjw"]
-[ext_resource type="Script" path="res://scripts/LimbTargeter.cs" id="2_1xp2s"]
+[ext_resource type="Script" path="res://scripts/old/Player.gd" id="1_quoh7"]
 [ext_resource type="PackedScene" uid="uid://bi545qlj5mtfm" path="res://scenes/hud.tscn" id="2_2n7lr"]
+[ext_resource type="Script" path="res://scripts/old/LimbTargeter.cs" id="2_ummp8"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i860k"]
 radius = 0.35
@@ -12,7 +12,7 @@ lightmap_size_hint = Vector2i(12, 13)
 radius = 0.35
 
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("collider", "display")]
-script = ExtResource("1_tnwjw")
+script = ExtResource("1_quoh7")
 collider = NodePath("CollisionShape3D")
 display = NodePath("CollisionShape3D/MeshInstance3D")
 gravity_mult = 1.05
@@ -33,7 +33,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="TargetSelector" type="RayCast3D" parent="Neck" node_paths=PackedStringArray("_limbs")]
 target_position = Vector3(0, 0, -200)
-script = ExtResource("2_1xp2s")
+script = ExtResource("2_ummp8")
 _limbs = []
 
 [node name="Hud" parent="." instance=ExtResource("2_2n7lr")]
