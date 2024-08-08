@@ -4,12 +4,12 @@ namespace Kinematics.scripts.IK;
 
 public class IKChainSegment
 {
-    public Vector3 Position;
+    public Vector3 TipPosition;
     public readonly float Length;
     
-    public IKChainSegment(Vector3 position, float length)
+    public IKChainSegment(Vector3 tipPosition, float length)
     {
-        Position = position;
+        TipPosition = tipPosition;
         Length = length;
     }
 }

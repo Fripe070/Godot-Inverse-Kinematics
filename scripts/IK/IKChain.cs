@@ -7,7 +7,7 @@ namespace Kinematics.scripts.IK;
 
 public class IKChainOptions
 {
-    public float Tolerance = 0.01f;
+    public float Tolerance = 0.001f;
     public int MaxIterations = 10;
     public bool PrioritiseEnd = true;
     public bool StraightIfTooFar = true;
@@ -20,9 +20,10 @@ public class IKChain
     public Vector3 RootPosition;
     private readonly IKChainOptions _options;
     
-    public double Error => Segments[^1].Position.DistanceTo(RootPosition) - Segments[^1].Length;
+    public double Error => Segments[^1].TipPosition.DistanceTo(_lastTarget);
     public double TotalLength => Segments.Sum(segment => segment.Length);
-    public Vector3 LastTarget { get; private set; }
+
+    private Vector3 _lastTarget;
     
     public IKChain(Vector3 rootPosition, IKChainSegment[] segments, IKChainOptions options = null)
     {
@@ -41,9 +42,10 @@ public class IKChain
         _options = options ?? new IKChainOptions();
     }
     
+    // TODO: When StraightIfTooFar is false, and the target becomes too far away, the chain does a weird snapping motion
     public double SolveTo(Vector3 target)
     {
-        LastTarget = target;
+        _lastTarget = target;
         
         bool tooFar = target.DistanceTo(RootPosition) > Segments.Sum(segment => segment.Length);
         if (_options.StraightIfTooFar && tooFar)
@@ -67,27 +69,27 @@ public class IKChain
     
     private void FabrikForward(Vector3 target)
     {
+        Segments[^1].TipPosition = target;
         // We work down the chain, starting from the end
-        for (int i = Segments.Length - 1; i >= 0; i--)
+        for (int i = Segments.Length - 2; i >= 0; i--)
         {
-            var segment = Segments[i];
-            // The segment at the end of the chain (the first one we iterate over) should be moved relative to the destination
-            var upSegmentPosition = i == Segments.Length - 1 ? target : Segments[i + 1].Position;
-            var direction = upSegmentPosition.DirectionTo(segment.Position);
-            segment.Position = upSegmentPosition + direction * segment.Length;
+            var currentSegment = Segments[i];
+            var previousSegment = Segments[i + 1];
+            var direction = previousSegment.TipPosition.DirectionTo(currentSegment.TipPosition);
+            currentSegment.TipPosition = previousSegment.TipPosition + direction * previousSegment.Length;
         }
     }
     
     private void FabrikBackward()
     {
-        Segments[0].Position = RootPosition;
         // We iterate up the chain, starting from the segment right after the base
-        for (var i = 1; i < Segments.Length; i++)
+        for (var i = 0; i < Segments.Length; i++)
         {
-            var segment = Segments[i];
-            var downSegmentPosition = Segments[i - 1].Position;
-            var direction = downSegmentPosition.DirectionTo(segment.Position);
-            segment.Position = downSegmentPosition + direction * segment.Length;
+            var currentSegment = Segments[i];
+            // Length is determined by the current segment when going backwards, which is very convenient here
+            var previousSegmentTip = i == 0 ? RootPosition : Segments[i - 1].TipPosition;  
+            var direction = previousSegmentTip.DirectionTo(currentSegment.TipPosition);
+            currentSegment.TipPosition = previousSegmentTip + direction * currentSegment.Length;
         }
     }
     
@@ -96,8 +98,8 @@ public class IKChain
         float offset = 0;
         foreach (var segment in Segments)
         {
-            segment.Position = RootPosition + direction * offset;
             offset += segment.Length;
+            segment.TipPosition = RootPosition + direction * offset;
         }
     }
 }

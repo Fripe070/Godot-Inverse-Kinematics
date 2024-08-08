@@ -23,24 +23,27 @@ public partial class LimbTargeter : RayCast3D
 				break;
 		}
 	}
+
+	private Vector3 _lastPoint;
 	
 	public override void _Process(double delta)
 	{
+		foreach (var limb in _limbs)
+		{
+			limb.Destination = SmoothMove(limb.Destination, _lastPoint, _speed, (float)delta);
+			DebugDraw3D.DrawSphere(limb.Destination, 0.02f, new Color(1, 0, 0));
+			if (!(_lastPoint.DistanceSquaredTo(limb.Destination) > 0.01f)) continue;
+			DebugDraw3D.DrawLine(_lastPoint, limb.Destination, new Color(0.5f, 0.5f, 0.5f));
+			DebugDraw3D.DrawSphere(_lastPoint, 0.02f, new Color(0, 1, 0));
+		}
 		if (!Input.IsActionPressed("grapple")) return;
-
-		Vector3 point;
-		if (IsColliding()) 
-			point = GetCollisionPoint();
+		if (IsColliding())
+			_lastPoint = GetCollisionPoint();
 		else
-			point = GlobalPosition + (
+			_lastPoint = GlobalPosition + (
 				GlobalTransform.Basis.X * TargetPosition.X
 				+ GlobalTransform.Basis.Y * TargetPosition.Y
 				+ GlobalTransform.Basis.Z * TargetPosition.Z).Normalized() * 10f;
-		
-		DebugDraw3D.DrawSphere(point, 0.02f, new Color(0, 1, 0));
-		
-		foreach (var limb in _limbs)
-			limb.Destination = SmoothMove(limb.Destination, point, _speed, (float)delta);
 	}
 	
 	private static Vector3 SmoothMove(Vector3 from, Vector3 to, float speed, float dt)
