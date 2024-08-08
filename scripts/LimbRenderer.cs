@@ -17,7 +17,7 @@ public partial class LimbRenderer : Node
 		float totalLength = _limb.Segments.Sum(segment => segment.Length);
 		bool canFitSpheres = totalLength > _limb.Segments.Count * 0.3f;
 		
-		var col = new Color(1, 0, 0);
+		var col = new Color(0.7f, 0.5f, 0.5f);
 		for (var i = 0; i < _limb.Segments.Count; i++)
 		{
 			var segment = _limb.Segments[i];
