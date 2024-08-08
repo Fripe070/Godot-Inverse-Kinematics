@@ -38,7 +38,8 @@ environment = SubResource("Environment_b6qus")
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." instance=ExtResource("1_mykwi")]
+[node name="Player" parent="." node_paths=PackedStringArray("controlled_limbs") instance=ExtResource("1_mykwi")]
+controlled_limbs = [NodePath("../Limb")]
 auto_jump = true
 friction = 1000.0
 stop_speed = 1.0
@@ -84,7 +85,5 @@ shape = SubResource("ConcavePolygonShape3D_0e4of")
 
 [node name="Limb" parent="." node_paths=PackedStringArray("_targetObject") instance=ExtResource("2_6ra64")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8207, 0.268248, 1.35091)
-_destinationOffset = Vector3(15, 0.795, 6.98)
-_segmentCount = 8
-_segmentLength = 1.0
+_segmentCount = 3
 _targetObject = NodePath("../Player")

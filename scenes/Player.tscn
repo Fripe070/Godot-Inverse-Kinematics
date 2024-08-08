@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1rf8jxqx2lvx"]
+[gd_scene load_steps=6 format=3 uid="uid://d1rf8jxqx2lvx"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_tnwjw"]
+[ext_resource type="Script" path="res://scripts/LimbTargeter.cs" id="2_1xp2s"]
 [ext_resource type="PackedScene" uid="uid://bi545qlj5mtfm" path="res://scenes/hud.tscn" id="2_2n7lr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i860k"]
@@ -29,5 +30,10 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera" type="Camera3D" parent="Neck"]
+
+[node name="TargetSelector" type="RayCast3D" parent="Neck" node_paths=PackedStringArray("_limbs")]
+target_position = Vector3(0, 0, -20)
+script = ExtResource("2_1xp2s")
+_limbs = []
 
 [node name="Hud" parent="." instance=ExtResource("2_2n7lr")]
