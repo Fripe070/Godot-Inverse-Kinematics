@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Godot.Collections;
 
 namespace Kinematics.scripts;
 
@@ -14,7 +12,8 @@ public partial class Limb : Node3D
 
     [Export] private float _tolerance = 0.01f;
     [Export] private int _maxIterations = 10;
-    [Export] private bool _prioritiseEnd = false;
+    [Export] private bool _prioritiseEnd;
+    [Export] private bool _straightIfTooFar = true;
 	
     public readonly List<Segment> Segments = new List<Segment>();
 
@@ -28,7 +27,7 @@ public partial class Limb : Node3D
     
     public override void _Ready()
     {
-        for (var i = 0; i <= _segmentCount; i++)
+        for (var i = 0; i < _segmentCount; i++)
             Segments.Add(new Segment(Position, _segmentLength));
     }
     
@@ -47,8 +46,7 @@ public partial class Limb : Node3D
         direction.Y = 0;
         direction = direction.Normalized();
         var axis = Vector3.Up.Cross(direction).Normalized();
-        direction = direction.Rotated(axis, Mathf.DegToRad((float)upAngle));
-        PointIn(direction);
+        PointIn(direction.Rotated(axis, Mathf.DegToRad(upAngle)));
     }
     
     private void PointIn(Vector3 direction)
@@ -65,7 +63,7 @@ public partial class Limb : Node3D
     private void Fabrik(Vector3 target)
     {
         bool tooFar = target.DistanceTo(Position) > Segments.Sum(segment => segment.Length);
-        if (tooFar)
+        if (_straightIfTooFar && tooFar)
         {
             PointIn(Position.DirectionTo(target));
             return;
