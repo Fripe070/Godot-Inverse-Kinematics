@@ -85,4 +85,5 @@ shape = SubResource("ConcavePolygonShape3D_0e4of")
 
 [node name="Limb" parent="." instance=ExtResource("2_6ra64")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8207, 0.268248, 1.35091)
-_segmentCount = 3
+_segmentLength = 1.0
+_prioritiseEnd = true

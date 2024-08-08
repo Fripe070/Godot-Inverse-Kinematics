@@ -12,8 +12,9 @@ public partial class Limb : Node3D
     [Export] private int _segmentCount = 4;
     [Export] private float _segmentLength = 2.0f;
 
-    private float _tolerance = 0.01f;
-    private int _maxIterations = 10;
+    [Export] private float _tolerance = 0.01f;
+    [Export] private int _maxIterations = 10;
+    [Export] private bool _prioritiseEnd = false;
 	
     public readonly List<Segment> Segments = new List<Segment>();
 
@@ -23,6 +24,8 @@ public partial class Limb : Node3D
         set => Destination = Position + value;
     }
     
+    public float Error => Destination.DistanceTo(Segments[^1].Position) - Segments[^1].Length;
+    
     public override void _Ready()
     {
         for (var i = 0; i <= _segmentCount; i++)
@@ -31,88 +34,80 @@ public partial class Limb : Node3D
     
     public override void _Process(double delta)
     {
-        PointTowards(Destination, -50);
+        PointTowardsAndUp(Destination, -70);
         Fabrik(Destination);
         
         DebugDraw2D.SetText("Target pos", Destination);
-        DebugDraw2D.SetText("Error", (Destination - Segments[^1].Position).Length());
+        DebugDraw2D.SetText("Error", Error);
     }
     
-    private void PointTowards(Vector3 goal, float upAngle)
+    private void PointTowardsAndUp(Vector3 goal, float upAngle)
     {
-        if (upAngle == 0f)
-        {
-            PointIn(Position.DirectionTo(goal));
-            return;
-        }
-
         var direction = goal - Position;
         direction.Y = 0;
         direction = direction.Normalized();
         var axis = Vector3.Up.Cross(direction).Normalized();
-        direction = direction.Rotated(axis, Mathf.DegToRad(upAngle));
+        direction = direction.Rotated(axis, Mathf.DegToRad((float)upAngle));
         PointIn(direction);
     }
     
     private void PointIn(Vector3 direction)
     {
-        for (var i = 1; i < Segments.Count; i++)
+        float offset = 0;
+        foreach (var segment in Segments)
         {
-            var segment = Segments[i];
-            var previousSegment = Segments[i - 1];
-            segment.Position = previousSegment.Position + direction * segment.Length;
+            segment.Position = Position + direction * offset;
+            offset += segment.Length;
         }
     }
     
     // TODO: Move IK logic into a separate class, away form the limb construction and maintenance logic
     private void Fabrik(Vector3 target)
     {
-        if ((target - Position).Length() > Segments.Sum(segment => segment.Length))
+        bool tooFar = target.DistanceTo(Position) > Segments.Sum(segment => segment.Length);
+        if (tooFar)
         {
-            var direction = (target - Position).Normalized();
-            var lastPosition = Position;
-            for (var i = 1; i < Segments.Count; i++)
-                lastPosition = Segments[i].Position = lastPosition + direction * Segments[i].Length;
+            PointIn(Position.DirectionTo(target));
             return;
         }
         
-        for (var i = 1; i < _maxIterations; i++)
+        for (var i = 0; i < _maxIterations; i++)
         {
-            float distanceFromDestination = (Segments[^1].Position - target).Length();
-            DebugDraw2D.SetText("Error", distanceFromDestination);
-            if (distanceFromDestination < _tolerance)
+            if (Error < _tolerance)
                 return;
             
             FabrikForward(target);
             FabrikBackward();
         }
+        if (_prioritiseEnd && Error > _tolerance && !tooFar)
+            FabrikForward(target);
     }
     
     private void FabrikForward(Vector3 destination)
     {
-        Segments[^1].Position = destination;
-
-        for (var i = 1; i < Segments.Count; i++)
+        // We work down the chain, starting from the end
+        for (int i = Segments.Count - 1; i >= 0; i--)
         {
-            var segment = Segments[^i];
-            var previousSegment = Segments[^(i + 1)];
+            var segment = Segments[i];
+            // The segment at the end of the chain (the first one we iterate over) should be moved relative to the destination
+            var upSegmentPosition = i == Segments.Count - 1 ? destination : Segments[i + 1].Position;
             
-            var direction = (previousSegment.Position - segment.Position).Normalized();
-            previousSegment.Position = segment.Position + direction * segment.Length;
+            var direction = upSegmentPosition.DirectionTo(segment.Position);
+            segment.Position = upSegmentPosition + direction * segment.Length;
         }
     }
     
     private void FabrikBackward()
     {
         Segments[0].Position = Position;
-
-        for (var i = 0; i < Segments.Count - 1; i++)
+        // We iterate up the chain, starting from the segment right after the base
+        for (var i = 1; i < Segments.Count; i++)
         {
             var segment = Segments[i];
-            var nextSegment = Segments[i + 1];
+            var downSegmentPosition = Segments[i - 1].Position;
+            var direction = downSegmentPosition.DirectionTo(segment.Position);
             
-            var direction = (nextSegment.Position - segment.Position).Normalized();
-            nextSegment.Position = segment.Position + direction * segment.Length;
+            segment.Position = downSegmentPosition + direction * segment.Length;
         }
     }
 }
