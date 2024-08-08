@@ -19,8 +19,8 @@ public partial class Limb : Node3D
 
     public Vector3 DestinationOffset
     {
-        get => Destination - Position;
-        set => Destination = Position + value;
+        get => Destination - GlobalPosition;
+        set => Destination = GlobalPosition + value;
     }
     
     public float Error => Destination.DistanceTo(Segments[^1].Position) - Segments[^1].Length;
@@ -28,7 +28,10 @@ public partial class Limb : Node3D
     public override void _Ready()
     {
         for (var i = 0; i < _segmentCount; i++)
-            Segments.Add(new Segment(Position, _segmentLength));
+            Segments.Add(new Segment(GlobalPosition, _segmentLength));
+        
+        var limbForward = GlobalTransform.Basis.Z;
+        Destination = GlobalPosition + limbForward * _segmentLength * _segmentCount / 2;
     }
     
     public override void _Process(double delta)
@@ -42,7 +45,7 @@ public partial class Limb : Node3D
     
     private void PointTowardsAndUp(Vector3 goal, float upAngle)
     {
-        var direction = goal - Position;
+        var direction = goal - GlobalPosition;
         direction.Y = 0;
         direction = direction.Normalized();
         var axis = Vector3.Up.Cross(direction).Normalized();
@@ -54,7 +57,7 @@ public partial class Limb : Node3D
         float offset = 0;
         foreach (var segment in Segments)
         {
-            segment.Position = Position + direction * offset;
+            segment.Position = GlobalPosition + direction * offset;
             offset += segment.Length;
         }
     }
@@ -62,10 +65,10 @@ public partial class Limb : Node3D
     // TODO: Move IK logic into a separate class, away form the limb construction and maintenance logic
     private void Fabrik(Vector3 target)
     {
-        bool tooFar = target.DistanceTo(Position) > Segments.Sum(segment => segment.Length);
+        bool tooFar = target.DistanceTo(GlobalPosition) > Segments.Sum(segment => segment.Length);
         if (_straightIfTooFar && tooFar)
         {
-            PointIn(Position.DirectionTo(target));
+            PointIn(GlobalPosition.DirectionTo(target));
             return;
         }
         
@@ -97,7 +100,7 @@ public partial class Limb : Node3D
     
     private void FabrikBackward()
     {
-        Segments[0].Position = Position;
+        Segments[0].Position = GlobalPosition;
         // We iterate up the chain, starting from the segment right after the base
         for (var i = 1; i < Segments.Count; i++)
         {

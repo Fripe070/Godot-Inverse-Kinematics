@@ -13,7 +13,7 @@ public partial class LimbRenderer : Node
 	public override void _Process(double delta)
 	{
 		DebugDraw2D.SetText("Segments", _limb.Segments.Count);
-		DebugDraw3D.DrawSphere(_limb.Position, 0.1f, new Color(1, 1, 1));
+		DebugDraw3D.DrawSphere(_limb.GlobalPosition, 0.1f, new Color(1, 1, 1));
 		DebugDraw3D.DrawSphere(_limb.Destination, 0.1f, new Color(1, 0, 0));
 		
 		float totalLength = _limb.Segments.Sum(segment => segment.Length);
