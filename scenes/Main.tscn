@@ -75,7 +75,7 @@ mesh = SubResource("PrismMesh_pbnib")
 shape = SubResource("ConcavePolygonShape3D_0e4of")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.70956, 0, 1.28405, 0, 0.855, 0, -1.46284, 0, 1.50061, 4.6818, 2.628, 7.35543)
+transform = Transform3D(1.66152, 0, 1.33175, 0, 0.855, 0, -1.51718, 0, 1.45845, 4.51858, 2.80512, 7.17581)
 mesh = SubResource("BoxMesh_jf1v0")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D3"]
@@ -83,7 +83,6 @@ mesh = SubResource("BoxMesh_jf1v0")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_0e4of")
 
-[node name="Limb" parent="." node_paths=PackedStringArray("_targetObject") instance=ExtResource("2_6ra64")]
+[node name="Limb" parent="." instance=ExtResource("2_6ra64")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8207, 0.268248, 1.35091)
 _segmentCount = 3
-_targetObject = NodePath("../Player")

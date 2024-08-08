@@ -8,27 +8,21 @@ namespace Kinematics.scripts;
 
 public partial class Limb : Node3D
 {
-    [Export] 
-    public Vector3 Destination;
-    [Export]
-    private int _segmentCount = 4;
-    [Export]
-    private float _segmentLength = 2.0f;
+    [Export] public Vector3 Destination;
+    [Export] private int _segmentCount = 4;
+    [Export] private float _segmentLength = 2.0f;
 
-    [Export] private Node3D _targetObject;
-	
     private float _tolerance = 0.01f;
     private int _maxIterations = 10;
 	
     public readonly List<Segment> Segments = new List<Segment>();
 
-    private Vector3 DestinationOffset
+    public Vector3 DestinationOffset
     {
         get => Destination - Position;
         set => Destination = Position + value;
     }
     
-
     public override void _Ready()
     {
         for (var i = 0; i <= _segmentCount; i++)
