@@ -115,19 +115,17 @@ public class Leg
     {
         _isStepping = true;
         
-        var nextStepPos = NextStepPosition;
-        
-        _footPosition = _footPosition.Lerp(nextStepPos, 1 - Mathf.Exp(-_options.StepSpeed * (float)delta));
-        
+        var stepPos = NextStepPosition;
+        _footPosition = _footPosition.Lerp(stepPos, 1 - Mathf.Exp(-_options.StepSpeed * (float)delta));
         float hStepDist = Mathf.Sqrt(
-            Mathf.Pow(_footPosition.X - nextStepPos.X, 2) 
-            + Mathf.Pow(_footPosition.Z - nextStepPos.Z, 2));
+            Mathf.Pow(_footPosition.X - stepPos.X, 2) 
+            + Mathf.Pow(_footPosition.Z - stepPos.Z, 2));
         if (_options.StopDropDistance > 0 && hStepDist > _options.StopDropDistance)
-            _footPosition.Y = Mathf.Lerp(_footPosition.Y, nextStepPos.Y + _options.StepHeight, 
+            _footPosition.Y = Mathf.Lerp(_footPosition.Y, stepPos.Y + _options.StepHeight, 
                                         1 - Mathf.Exp(-_options.StepRaiseSpeed * (float)delta));
 
-        if (_footPosition.DistanceTo(nextStepPos) >= _options.FootArrivalThreshold) return;
+        if (_footPosition.DistanceTo(stepPos) >= _options.FootArrivalThreshold) return;
         _isStepping = false;
-        _footPosition = nextStepPos;
+        _footPosition = stepPos;
     }
 }
