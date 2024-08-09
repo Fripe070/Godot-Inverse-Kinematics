@@ -13,10 +13,14 @@ public partial class Walker : Node3D
 	
 	private float _drag = 10.0f;
 	private float _stationaryVelThreshold = 0.05f;
-	public bool IsWalking { get; private set; }
+	private float _stationaryRotThreshold = Mathf.DegToRad(1);
+	
+	public bool IsMoving { get; private set; }
+	public bool IsRotating { get; private set; }
 
 	private Leg[] _legs;
 	public Vector3 Velocity;
+	public float YawRotationVelocity;
 	public Vector3 MovementTarget { get; set; }
 	
 	private IIKChainRenderer _legRenderer;
@@ -51,7 +55,12 @@ public partial class Walker : Node3D
 		Velocity = moveDir * _acceleration; // Should I not be multiplying with delta here????? But that acts __weird__  :sob:
 		GlobalTranslate(Velocity * (float)delta);
 
-		IsWalking = Velocity.Length() >= _stationaryVelThreshold;
+		YawRotationVelocity = Mathf.DegToRad(30);
+		RotateY(YawRotationVelocity * (float)delta);
+		DebugDraw3D.DrawArrow(GlobalTransform.Origin, GlobalTransform.Origin + GlobalBasis.Z, new Color(1, 0, 1), 0.1f);
+
+		IsRotating = YawRotationVelocity >= _stationaryRotThreshold;
+		IsMoving = Velocity.Length() >= _stationaryVelThreshold || IsRotating;
 		
 		foreach (var leg in _legs)
 		{
