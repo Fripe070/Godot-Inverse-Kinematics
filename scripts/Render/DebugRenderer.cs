@@ -17,11 +17,11 @@ public class DebugRenderer : IIKChainRenderer
         var col = _rootColor;
         for (var i = 0; i < chain.Segments.Length; i++)
         {
-            col.H = (col.H + (_hueShift / chain.Segments.Length)) % 1;
             var lastPos = i == 0 ? chain.RootPosition : chain.Segments[i - 1].TipPosition;
             DebugDraw3D.DrawArrow(lastPos, chain.Segments[i].TipPosition, col, 0.1f);
             if (canFitSpheres)
                 DebugDraw3D.DrawSphere(chain.Segments[i].TipPosition, LimbJointRadius, col);
+            col.H = (col.H + (_hueShift / chain.Segments.Length)) % 1;
         }
     }
 }
