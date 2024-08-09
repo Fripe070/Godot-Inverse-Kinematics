@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Kinematics.scripts.IK;
 using Kinematics.scripts.Render;
@@ -33,6 +34,7 @@ public class Leg
     
     private Vector3 _footPosition;
     private bool _isStepping;
+    private bool _isGrounded = true;
     
     private Vector3 RootPosition => _walker.GlobalTransform.Origin + _options.RootOffset;
     private Vector3 DesiredFootPosition => RootPosition + _options.DesiredFootOffset;
@@ -77,9 +79,14 @@ public class Leg
     
     public void Update(double delta)
     {
-        if (_isStepping || _footPosition.DistanceTo(DesiredFootPosition) > AcceptedRadius)
+        bool shouldStartNewStep = _footPosition.DistanceTo(DesiredFootPosition) > AcceptedRadius;
+        var (leg1, leg2) = _walker.GetAdjacentLegs(this);
+        if (leg1._isStepping || leg2._isStepping)
+            shouldStartNewStep = false;
+        
+        if (_isStepping || shouldStartNewStep)
             Step(delta);
-
+        
         if (_isStepping)
             _footPosition += _walker.Velocity * (float)delta;
     }
