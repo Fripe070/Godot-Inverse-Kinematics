@@ -15,6 +15,7 @@ public partial class Limb : Node3D
 
     [Export] private int _segmentCount = 4;
     [Export] private float _segmentLength = 2.0f;
+    [Export] private bool _constrainSinglePlane = true;
 
     public Vector3 Destination;
 
@@ -32,7 +33,8 @@ public partial class Limb : Node3D
 
     public override void _Process(double delta)
     {
-        PointTowardsAndUp(Destination, -70);
+        if (_constrainSinglePlane)
+            _chain.PointTowardsAndUp(Destination, 70);
         _chain.SolveTo(Destination);
 
         _renderer.Render(_chain);
@@ -45,14 +47,5 @@ public partial class Limb : Node3D
         for (var i = 1; i < _chain.Segments.Length; i++)
             averageLength += _chain.Segments[i].TipPosition.DistanceTo(_chain.Segments[i - 1].TipPosition);
         DebugDraw2D.SetText("Average length", averageLength / _chain.Segments.Length);
-    }
-
-    private void PointTowardsAndUp(Vector3 goal, float upAngle)
-    {
-        var direction = goal - _chain.RootPosition;
-        direction.Y = 0;
-        direction = direction.Normalized();
-        var axis = Vector3.Up.Cross(direction).Normalized();
-        _chain.PointIn(direction.Rotated(axis, Mathf.DegToRad(upAngle)));
     }
 }

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckwn8jy4ry5if"]
+
+[ext_resource type="Script" path="res://scripts/Walker/Walker.cs" id="1_qayl2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_sfwpq"]
+
+[node name="Walker" type="Node3D"]
+script = ExtResource("1_qayl2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_sfwpq")

@@ -32,7 +32,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 [node name="Camera" type="Camera3D" parent="Neck"]
 
 [node name="TargetSelector" type="RayCast3D" parent="Neck" node_paths=PackedStringArray("_limbs")]
-target_position = Vector3(0, 0, -200)
+target_position = Vector3(0, 0, -20)
 script = ExtResource("2_ummp8")
 _limbs = []
 

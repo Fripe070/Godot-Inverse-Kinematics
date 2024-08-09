@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Godot;
 
@@ -16,10 +15,11 @@ public class IKChainOptions
 
 public class IKChain
 {
+    private readonly IKChainOptions _options;
     public readonly IKChainSegment[] Segments;
     public Vector3 RootPosition;
-    private readonly IKChainOptions _options;
     
+    public Vector3 EndPosition => Segments[^1].TipPosition;
     public double Error => Segments[^1].TipPosition.DistanceTo(_lastTarget);
     public double TotalLength => Segments.Sum(segment => segment.Length);
 
@@ -27,19 +27,18 @@ public class IKChain
     
     public IKChain(Vector3 rootPosition, IKChainSegment[] segments, IKChainOptions options = null)
     {
+        _options = options ?? new IKChainOptions();
         RootPosition = rootPosition;
         Segments = segments;
-        _options = options ?? new IKChainOptions();
     }
     
     public IKChain(Vector3 rootPosition, float segmentLength, int segmentCount, IKChainOptions options = null)
     {
+        _options = options ?? new IKChainOptions();
         RootPosition = rootPosition;
         Segments = new IKChainSegment[segmentCount];
         for (var i = 0; i < segmentCount; i++)
             Segments[i] = new IKChainSegment(rootPosition, segmentLength);
-
-        _options = options ?? new IKChainOptions();
     }
     
     // TODO: When StraightIfTooFar is false, and the target becomes too far away, the chain does a weird snapping motion. Gets reduced if steps are increased
@@ -70,7 +69,6 @@ public class IKChain
     private void FabrikForward(Vector3 target)
     {
         Segments[^1].TipPosition = target;
-        // We work down the chain, starting from the end
         for (int i = Segments.Length - 2; i >= 0; i--)
         {
             var currentSegment = Segments[i];
@@ -82,7 +80,6 @@ public class IKChain
     
     private void FabrikBackward()
     {
-        // We iterate up the chain, starting from the segment right after the base
         for (var i = 0; i < Segments.Length; i++)
         {
             var currentSegment = Segments[i];
@@ -101,5 +98,14 @@ public class IKChain
             offset += segment.Length;
             segment.TipPosition = RootPosition + direction * offset;
         }
+    }
+    
+    public void PointTowardsAndUp(Vector3 target, float upAngle)
+    {
+        var direction = target - RootPosition;
+        direction.Y = 0;
+        direction = direction.Normalized();
+        var axis = Vector3.Up.Cross(direction).Normalized();
+        PointIn(direction.Rotated(axis, Mathf.DegToRad(-upAngle)));
     }
 }
