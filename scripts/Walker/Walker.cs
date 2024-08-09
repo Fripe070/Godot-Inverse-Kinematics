@@ -9,7 +9,7 @@ public partial class Walker : Node3D
 	[Export] private float _drag = 0.5f;
 	
 	private Leg[] _legs;
-	private Vector3 _velocity;
+	public Vector3 Velocity;
 	
 	private IIKChainRenderer _legRenderer;
 	
@@ -33,10 +33,10 @@ public partial class Walker : Node3D
 
 	public override void _Process(double delta)
 	{
-		GlobalTranslate(_velocity * (float)delta);
-		_velocity *= 1 - (float)delta * _drag;
+		GlobalTranslate(Velocity * (float)delta);
+		Velocity *= 1 - (float)delta * _drag;
 		
-		_velocity += new Vector3(0, 0, 0.3f) * (float)delta;
+		Velocity += new Vector3(0, 0, 0.4f) * (float)delta;
 
 		foreach (var leg in _legs)
 		{
