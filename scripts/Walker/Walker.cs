@@ -10,11 +10,13 @@ public partial class Walker : Node3D
 	
 	private Leg[] _legs;
 	public Vector3 Velocity;
+	public Vector3 MovementTarget { get; set; }
 	
 	private IIKChainRenderer _legRenderer;
 	
 	public override void _Ready()
 	{
+		MovementTarget = GlobalPosition;
 		_legs = new Leg[_legCount];
 
 		float legYRotation = Mathf.Pi / _legCount;
@@ -33,11 +35,13 @@ public partial class Walker : Node3D
 
 	public override void _Process(double delta)
 	{
+		var moveDir = GlobalTransform.Origin.DirectionTo(MovementTarget);
+		moveDir.Y = 0;
+		Velocity += moveDir * (float)delta * 3;
+		
 		GlobalTranslate(Velocity * (float)delta);
 		Velocity *= 1 - (float)delta * _drag;
 		
-		Velocity += new Vector3(0, 0, 0.4f) * (float)delta;
-
 		foreach (var leg in _legs)
 		{
 			leg.Update(delta);

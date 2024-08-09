@@ -59,7 +59,7 @@ public class Leg
         DebugDraw3D.DrawSphere(DesiredFootPosition, 0.1f, new Color(0, 1, 0));
         var col = new Color(1, 0, 0).Lerp(new Color(0, 0, 1), 
             _footPosition.DistanceTo(DesiredFootPosition) / _options.AcceptedRadius);
-        DebugDraw3D.DrawSphere(DesiredFootPosition, _options.AcceptedRadius, col);
+        // DebugDraw3D.DrawSphere(DesiredFootPosition, _options.AcceptedRadius, col);
         DebugDraw3D.DrawArrow(NextStepPosition + Vector3.Up * 2, NextStepPosition, new Color(0, 1, 0), 0.1f);
     }
     

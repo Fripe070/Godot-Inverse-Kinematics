@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://5o1x2u3d0nfv"]
+[gd_scene load_steps=13 format=3 uid="uid://5o1x2u3d0nfv"]
 
 [ext_resource type="PackedScene" uid="uid://d1rf8jxqx2lvx" path="res://scenes/Player.tscn" id="1_mykwi"]
 [ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_v5hmt"]
@@ -17,6 +17,10 @@ background_mode = 2
 sky = SubResource("Sky_nvr65")
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_0wkfv"]
+vertices = PackedVector3Array(14.5, 0.690547, 1.75, 16.5, 1.44055, 1.75, 16.5, 1.44055, -1.75, 14.5, 0.690547, -1.75, -39.5, 0.440547, 9.75, 4.75, 0.440547, 9.75, 5.5, 0.440547, 8.5, 7.25, 0.440547, 7.75, 14.5, 0.440547, 2.5, 14.5, 0.690547, 1.75, 5.5, 0.440547, 8.5, 7.25, 0.440547, 7.75, 14.5, 0.690547, 1.75, 14.5, 0.690547, -1.75, 5.5, 0.440547, 8.5, 14.5, 0.440547, -2.75, 15.75, 0.440547, -39.5, -39.5, 0.440547, -39.5, -39.5, 0.440547, 9.75, 5.5, 0.440547, 8.5, 14.5, 0.690547, -1.75, 14.5, 0.440547, -2.75, 14.5, 0.440547, -2.75, 16, 0.440547, -2.75, 15.75, 0.440547, -39.5, 16, 0.440547, -2.75, 39.5, 0.440547, -2.75, 39.5, 0.440547, -39.5, 15.75, 0.440547, -39.5, 16.5, 1.44055, 1.75, 62.25, 0.440547, 1.75, 62.25, 0.440547, -1.75, 16.5, 1.44055, -1.75, 35.6855, 7.44055, 1.75, 38.6371, 7.69055, 1.75, 38.6371, 7.69055, -1.75, 35.6855, 7.44055, -1.75, 60.5053, 0.690547, 0.482639, 19.5, 0.440547, -1.5, 19.5, 0.440547, 1.5, 39.5, 0.440547, 1.5, 39.5, 0.440547, -1.5, 4.75, 3.69055, 6.25, 3.75, 3.69055, 7, 4, 3.69055, 8, 9, 0.940547, 13, 10, 0.940547, 12.25, 5.625, 3.69055, 7.25, 9, 0.690547, 14, 8.5, 0.440547, 14, 8.5, 0.440547, 39.5, 39.5, 0.440547, 2.75, 14.5, 0.440547, 2.5, 11, 0.440547, 12.25, 8.5, 0.440547, 39.5, 39.5, 0.440547, 39.5, 10, 0.940547, 12.25, 9, 0.940547, 13, 9, 0.690547, 14, 11, 0.440547, 12.25, 10, 0.940547, 12.25, 9, 0.690547, 14, 8.5, 0.440547, 39.5, 14.5, 0.440547, 2.5, 7.25, 0.440547, 7.75, 10.25, 0.440547, 10.5, 14.5, 0.440547, 2.5, 10.25, 0.440547, 10.5, 11, 0.440547, 12.25, 8.5, 0.440547, 39.5, 8.5, 0.440547, 14, 5.75, 0.440547, 11.5, 8.5, 0.440547, 39.5, 5.75, 0.440547, 11.5, 4.75, 0.440547, 9.75, -39.5, 0.440547, 9.75, -39.5, 0.440547, 39.5)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1), PackedInt32Array(6, 5, 4), PackedInt32Array(9, 8, 7), PackedInt32Array(11, 10, 12), PackedInt32Array(12, 10, 13), PackedInt32Array(15, 14, 16), PackedInt32Array(16, 14, 18), PackedInt32Array(16, 18, 17), PackedInt32Array(21, 20, 19), PackedInt32Array(24, 23, 22), PackedInt32Array(26, 25, 27), PackedInt32Array(27, 25, 28), PackedInt32Array(36, 33, 32), PackedInt32Array(32, 33, 29), PackedInt32Array(33, 36, 34), PackedInt32Array(34, 37, 30), PackedInt32Array(30, 37, 31), PackedInt32Array(31, 37, 35), PackedInt32Array(35, 34, 36), PackedInt32Array(34, 35, 37), PackedInt32Array(41, 40, 38), PackedInt32Array(38, 40, 39), PackedInt32Array(43, 42, 44), PackedInt32Array(44, 42, 47), PackedInt32Array(44, 47, 45), PackedInt32Array(45, 47, 46), PackedInt32Array(50, 49, 48), PackedInt32Array(52, 51, 53), PackedInt32Array(53, 51, 54), PackedInt32Array(54, 51, 55), PackedInt32Array(58, 57, 56), PackedInt32Array(60, 59, 61), PackedInt32Array(61, 59, 62), PackedInt32Array(65, 64, 63), PackedInt32Array(68, 67, 66), PackedInt32Array(71, 70, 69), PackedInt32Array(73, 72, 74), PackedInt32Array(74, 72, 75), PackedInt32Array(75, 72, 76)]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_4kt2x"]
 
@@ -39,50 +43,59 @@ environment = SubResource("Environment_b6qus")
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." node_paths=PackedStringArray("controlled_limbs") instance=ExtResource("1_mykwi")]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_0wkfv")
+
+[node name="Static" type="Node" parent="NavigationRegion3D"]
+
+[node name="Ground" type="StaticBody3D" parent="NavigationRegion3D/Static"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Static/Ground"]
+shape = SubResource("WorldBoundaryShape3D_4kt2x")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Static/Ground"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+mesh = SubResource("PlaneMesh_l8oow")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Static"]
+transform = Transform3D(50.04, 0, 0, 0, 7.795, 0, 0, 0, 4.11, 37.635, 3.643, 0)
+mesh = SubResource("PrismMesh_pbnib")
+skeleton = NodePath("../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Static/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Static/MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0e4of")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="NavigationRegion3D/Static"]
+transform = Transform3D(-7.03998, -0.597658, -1.63914, 4.54468, -2.03546, 0, -7.70732, -0.654312, 1.49721, 8.38526, -0.0548432, 11.4208)
+mesh = SubResource("PrismMesh_pbnib")
+skeleton = NodePath("../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Static/MeshInstance3D2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Static/MeshInstance3D2/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0e4of")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="NavigationRegion3D/Static"]
+transform = Transform3D(1.66152, 0, 1.33175, 0, 0.855, 0, -1.51718, 0, 1.45845, 4.51858, 2.80512, 7.17581)
+mesh = SubResource("BoxMesh_jf1v0")
+skeleton = NodePath("../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Static/MeshInstance3D3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Static/MeshInstance3D3/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0e4of")
+
+[node name="Player" parent="." node_paths=PackedStringArray("controlled_limbs", "controlled_walkers") instance=ExtResource("1_mykwi")]
 controlled_limbs = [NodePath("../Limb"), NodePath("../Limb2")]
+controlled_walkers = [NodePath("../Walker")]
 auto_jump = true
 friction = 1000.0
 stop_speed = 1.0
 dash_speed = 16.0
 dash_up_mult = 0.75
 slide_friction = 0.0
-
-[node name="Ground" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
-shape = SubResource("WorldBoundaryShape3D_4kt2x")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
-mesh = SubResource("PlaneMesh_l8oow")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(50.04, 0, 0, 0, 7.795, 0, 0, 0, 4.11, 37.635, 3.643, 0)
-mesh = SubResource("PrismMesh_pbnib")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_0e4of")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(-7.03998, -0.597658, -1.63914, 4.54468, -2.03546, 0, -7.70732, -0.654312, 1.49721, 8.38526, -0.0548432, 11.4208)
-mesh = SubResource("PrismMesh_pbnib")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_0e4of")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.66152, 0, 1.33175, 0, 0.855, 0, -1.51718, 0, 1.45845, 4.51858, 2.80512, 7.17581)
-mesh = SubResource("BoxMesh_jf1v0")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D3"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_0e4of")
 
 [node name="Limb" parent="." instance=ExtResource("2_v5hmt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.26759, 0.303925, -1.59797)

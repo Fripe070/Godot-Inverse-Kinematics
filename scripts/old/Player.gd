@@ -3,6 +3,8 @@ extends CharacterBody3D
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @export var controlled_limbs: Array[Node3D]
+@export var controlled_walkers: Array[Node3D]
+
 
 @export var animation_player: AnimationPlayer
 @export var collider: CollisionShape3D
@@ -66,6 +68,7 @@ func _ready() -> void:
 	display.mesh.height = standing_height
 
 	$Neck/TargetSelector._limbs = controlled_limbs
+	$Neck/TargetSelector._walkers = controlled_walkers
 	
 
 func can_jump() -> bool:

@@ -1,10 +1,12 @@
+using System;
 using Godot;
 
 namespace Kinematics.scripts.old;
 
 public partial class LimbTargeter : RayCast3D
 {
-	[Export] private old.Limb[] _limbs;
+	[Export] private Limb[] _limbs = Array.Empty<Limb>();
+	[Export] private Walker.Walker[] _walkers = Array.Empty<Walker.Walker>();
 	[Export] private float _speed = 5;
 	
 	public override void _UnhandledInput(InputEvent @event)
@@ -36,6 +38,9 @@ public partial class LimbTargeter : RayCast3D
 			DebugDraw3D.DrawLine(_lastPoint, limb.Destination, new Color(0.5f, 0.5f, 0.5f));
 			DebugDraw3D.DrawSphere(_lastPoint, 0.02f, new Color(0, 1, 0));
 		}
+		foreach (var walker in _walkers)
+			walker.MovementTarget = _lastPoint;
+		
 		if (!Input.IsActionPressed("grapple")) return;
 		if (IsColliding())
 			_lastPoint = GetCollisionPoint();
@@ -43,7 +48,7 @@ public partial class LimbTargeter : RayCast3D
 			_lastPoint = GlobalPosition + (
 				GlobalTransform.Basis.X * TargetPosition.X
 				+ GlobalTransform.Basis.Y * TargetPosition.Y
-				+ GlobalTransform.Basis.Z * TargetPosition.Z).Normalized() * 10f;
+				+ GlobalTransform.Basis.Z * TargetPosition.Z).Normalized() * TargetPosition.Length();
 	}
 	
 	private static Vector3 SmoothMove(Vector3 from, Vector3 to, float speed, float dt)
