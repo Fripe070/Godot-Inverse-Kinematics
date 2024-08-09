@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using Kinematics.scripts.IK;
 using Kinematics.scripts.Render;
@@ -17,7 +16,6 @@ public class LegOptions
     public float AcceptedRadius = 1.0f;
     public float AcceptedStationaryRadius = 0.4f;
     
-    public float StationaryVelThreshold = 1.6f;
     public float FootArrivalThreshold = 0.1f;
     
     public float StepHeight = 1.0f;
@@ -39,7 +37,7 @@ public class Leg
     private Vector3 RootPosition => _walker.GlobalTransform.Origin + _options.RootOffset;
     private Vector3 DesiredFootPosition => RootPosition + _options.DesiredFootOffset;
     
-    private float AcceptedRadius => _walker.Velocity.Length() >= _options.StationaryVelThreshold ? _options.AcceptedRadius : _options.AcceptedStationaryRadius;
+    private float AcceptedRadius => _walker.IsWalking ? _options.AcceptedRadius : _options.AcceptedStationaryRadius;
     
     private Vector3 NextStepPosition
     {
@@ -47,7 +45,7 @@ public class Leg
         {
             var vel = _walker.Velocity;
             vel.Y = 0f;
-            if (vel.Length() < _options.StationaryVelThreshold) return DesiredFootPosition;
+            if (!_walker.IsWalking) return DesiredFootPosition;
             
             float nudgeDist = Mathf.Min(vel.Length() * _options.VelocityStepNudgeMultiplier, AcceptedRadius);
             return RootPosition + _options.DesiredFootOffset + vel.Normalized() * nudgeDist;
