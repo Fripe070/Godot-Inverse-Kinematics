@@ -40,16 +40,10 @@ public partial class Walker : Node3D
 		}
 		
 		_legRenderer = new DebugRenderer();
-
-		Engine.MaxFps = 100;
 	}
 
 	public override void _Process(double delta)
 	{
-		GD.Print(Engine.MaxFps);
-		GD.Print(delta);
-		// Velocity *= 1 - Mathf.Min((float)delta * _drag, 1);
-		
 		var moveDir = MovementTarget - GlobalTransform.Origin;
 		moveDir.Y = 0;
 		moveDir = moveDir.Normalized() * Mathf.Min(moveDir.Length(), 1);  // Slow down when we start reaching the target (within 1 unit in this case)
