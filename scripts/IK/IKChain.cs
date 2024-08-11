@@ -20,7 +20,7 @@ public class IKChain
     public Vector3 RootPosition;
     
     public Vector3 EndPosition => Segments[^1].TipPosition;
-    public double Error => Segments[^1].TipPosition.DistanceTo(_lastTarget);
+    public double Error => EndPosition.DistanceTo(_lastTarget);
     public double TotalLength => Segments.Sum(segment => segment.Length);
 
     private Vector3 _lastTarget;
@@ -102,9 +102,7 @@ public class IKChain
     
     public void PointTowardsAndUp(Vector3 target, float upAngle)
     {
-        var direction = target - RootPosition;
-        direction.Y = 0;
-        direction = direction.Normalized();
+        var direction = (target - RootPosition).WithY(0).Normalized();
         var axis = Vector3.Up.Cross(direction).Normalized();
         PointIn(direction.Rotated(axis, Mathf.DegToRad(-upAngle)));
     }
