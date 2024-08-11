@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://nhlstmtaxnnx"]
-
-[ext_resource type="Script" path="res://scripts/old/Spider.cs" id="1_2almr"]
-
-[node name="Spider" type="Node3D"]
-script = ExtResource("1_2almr")

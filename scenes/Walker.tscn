@@ -11,8 +11,22 @@ uv1_scale = Vector3(3, 2, 3)
 material = SubResource("StandardMaterial3D_5s8o1")
 flip_faces = true
 
-[node name="Walker" type="Node3D"]
+[node name="Walker" type="Node3D" node_paths=PackedStringArray("_legMesh")]
 script = ExtResource("1_qayl2")
+_legMesh = NodePath("CSGPolygon3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_ct56m")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+polygon = PackedVector2Array(-0.2, -0.2, -0.2, 0.2, 0.2, 0.2, 0.2, -0.2)
+mode = 2
+path_node = NodePath("")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false

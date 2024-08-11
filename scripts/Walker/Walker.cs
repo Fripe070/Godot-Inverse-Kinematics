@@ -6,10 +6,12 @@ namespace Kinematics.scripts.Walker;
 
 public partial class Walker : Node3D
 {
+	[Export] private CsgPolygon3D _legMesh;
+	
 	[Export] private int _legCount = 4;
-	[Export] private float _legSegmentLength = 2.0f;
+	[Export] private float _legSegmentLength = 1.0f;
 	[Export] private int _legSegmentCount = 4;
-	[Export] private float _acceleration = 1.0f;
+	[Export] private float _acceleration = 5.0f;
 	[Export] private float _rotationAccelerationDeg = 90;
 	private float RotationAcceleration => Mathf.DegToRad(_rotationAccelerationDeg);
 	
@@ -22,11 +24,11 @@ public partial class Walker : Node3D
 	public bool IsSignificantlyRotating { get; private set; }
 
 	private Leg[] _legs;
+	private PathRenderer[] _legRenderers;
+	
 	public Vector3 Velocity;
 	public float YawRotationVelocity;
 	public Vector3 MovementTarget { get; set; }
-	
-	private IIKChainRenderer _legRenderer;
 	
 	private Vector3 ForwardVec => -GlobalTransform.Basis.Z;
 	
@@ -34,6 +36,7 @@ public partial class Walker : Node3D
 	{
 		MovementTarget = GlobalPosition;
 		_legs = new Leg[_legCount];
+		_legRenderers = new PathRenderer[_legCount];
 
 		float legYRotation = Mathf.Pi / _legCount;
 		for (var i = 0; i < _legCount; i++)
@@ -46,9 +49,11 @@ public partial class Walker : Node3D
 				SegmentLength = _legSegmentLength
 			});
 			legYRotation += Mathf.Pi * 2 / _legCount;
+			
+			_legRenderers[i] = new PathRenderer(_legMesh);
+			_legRenderers[i].Name = $"Leg Renderer #{i}";
+			AddChild(_legRenderers[i]);
 		}
-		
-		_legRenderer = new DebugRenderer();
 	}
 
 	public override void _Process(double delta)
@@ -79,10 +84,11 @@ public partial class Walker : Node3D
 		
 		IsMoving = Velocity.Length() >= _stationaryVelThreshold || IsSignificantlyRotating;
 		
-		foreach (var leg in _legs)
+		for (var i = 0; i < _legCount; i++)
 		{
-			leg.Update(delta);
-			leg.Render(_legRenderer);
+			_legs[i].Update(delta);
+			_legs[i].Render(_legRenderers[i]);
+			_legs[i].Render(new DebugRenderer());
 		}
 		// DebugDraw3D.DrawArrow(GlobalTransform.Origin, GlobalTransform.Origin + Velocity, new Color(0, 1, 0), 0.1f);
 	}

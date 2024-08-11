@@ -14,7 +14,7 @@ public class DebugRenderer : IIKChainRenderer
         Render(chain, _rootColor);
     }
     
-    public void Render(IKChain chain, Color color)
+    private void Render(IKChain chain, Color color)
     {
         DebugDraw3D.DrawSphere(chain.RootPosition, 0.1f, new Color(0.2f, 0.2f, 0.2f));
         

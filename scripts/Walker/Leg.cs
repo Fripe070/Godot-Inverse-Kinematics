@@ -81,7 +81,8 @@ public class Leg
         var chain = new IKChain(RootPosition, _options.SegmentLength, _options.SegmentCount, chainOptions);
         chain.PointTowardsAndUp(_footPosition, 60);
         chain.SolveTo(_footPosition);
-        renderer.Render(chain, _isStepping ? new Color(0, 1, 0) : new Color(1, 0, 0));
+        // renderer.Render(chain, _isStepping ? new Color(0, 1, 0) : new Color(1, 0, 0));
+        renderer.Render(chain);
         
         DebugDraw3D.DrawSphere(DesiredFootPosition, 0.1f, new Color(0, 1, 0));
         var col = new Color(1, 0, 0).Lerp(new Color(0, 0, 1), 
