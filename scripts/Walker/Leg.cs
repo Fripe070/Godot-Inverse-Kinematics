@@ -50,16 +50,13 @@ public class Leg
             var candidate = DesiredFootPosition;
             if (!_walker.IsMoving) return candidate;
 
-            // var rotAddition = DesiredFootPosition.DirectionTo(RootPosition).WithY(0);
-            // rotAddition = rotAddition.Normalized().Rotated(Vector3.Up, -Mathf.Pi / 2);
-            // candidate += rotAddition * AcceptedRadius;
-
-            var e = DesiredFootPosition.DirectionTo(RootPosition).WithY(0).Normalized()
+            var rotAddition = DesiredFootPosition
+                .DirectionTo(RootPosition).WithY(0).Normalized()
                 .Rotated(Vector3.Up, -Mathf.Pi / 2) * _walker.YawRotationVelocity;
-            DebugDraw3D.DrawArrow(candidate, candidate + e, new Color(1, 0, 0), 0.1f);
-            candidate += e;
+            DebugDraw3D.DrawArrow(candidate, candidate + rotAddition, new Color(1, 0, 0), 0.1f);
+            candidate += rotAddition;
 
-            float nudgeDist = Mathf.Min(_walker.Velocity.WithY(0).Length() * _options.VelocityStepNudgeMultiplier, AcceptedRadius);
+            float nudgeDist = _walker.Velocity.WithY(0).Length() * _options.VelocityStepNudgeMultiplier;
             candidate += _walker.Velocity.WithY(0).Normalized() * nudgeDist;
             candidate.Y += _walker.Velocity.Y;
 
