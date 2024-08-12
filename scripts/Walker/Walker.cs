@@ -88,7 +88,6 @@ public partial class Walker : Node3D
 		{
 			_legs[i].Update(delta);
 			_legs[i].Render(_legRenderers[i]);
-			_legs[i].Render(new DebugRenderer());
 		}
 		// DebugDraw3D.DrawArrow(GlobalTransform.Origin, GlobalTransform.Origin + Velocity, new Color(0, 1, 0), 0.1f);
 	}

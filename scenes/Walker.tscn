@@ -20,10 +20,11 @@ _rotationAccelerationDeg = 180.0
 mesh = SubResource("BoxMesh_ct56m")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+use_collision = true
 polygon = PackedVector2Array(-0.2, -0.2, -0.2, 0.2, 0.2, 0.2, 0.2, -0.2)
 mode = 2
 path_node = NodePath("")
-path_interval_type = 0
+path_interval_type = 1
 path_interval = 1.0
 path_simplify_angle = 0.0
 path_rotation = 2
