@@ -23,13 +23,8 @@ public partial class PathRenderer : Path3D, IIKChainRenderer
     public void Render(IKChain chain)
     {
         Curve.ClearPoints();
-        Curve.AddPoint(WorldToLocal(chain.RootPosition));
+        Curve.AddPoint(chain.RootPosition);
         foreach (var segment in chain.Segments)
-            Curve.AddPoint(WorldToLocal(segment.TipPosition));
-    }
-    
-    private Vector3 WorldToLocal(Vector3 worldPos)
-    {
-        return (worldPos - GlobalPosition).Rotated(Vector3.Up, -GlobalRotation.Y);
+            Curve.AddPoint(segment.TipPosition);
     }
 }

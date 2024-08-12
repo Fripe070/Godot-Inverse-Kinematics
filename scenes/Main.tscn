@@ -101,6 +101,5 @@ _segmentLength = 0.4
 _constrainSinglePlane = false
 
 [node name="Walker" parent="." instance=ExtResource("3_b2lli")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.22651, 1.00667, 2.3048)
 _legSegmentLength = 0.5
 _legSegmentCount = 8

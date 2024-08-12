@@ -9,8 +9,8 @@ public partial class Limb : Node3D
     [Export]
     public Vector3 RelativeDestination
     {
-        get => Destination - GlobalPosition;
-        set => Destination = GlobalPosition + value;
+        get => Destination - Position;
+        set => Destination = Position + value;
     }
 
     [Export] private int _segmentCount = 4;
@@ -27,7 +27,7 @@ public partial class Limb : Node3D
         var chainOptions = new IKChainOptions
         {
         };
-        _chain = new IKChain(GlobalPosition, _segmentLength, _segmentCount, chainOptions);
+        _chain = new IKChain(Position, _segmentLength, _segmentCount, chainOptions);
         _renderer = new DebugRenderer();
     }
 

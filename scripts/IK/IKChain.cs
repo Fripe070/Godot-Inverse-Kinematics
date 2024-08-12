@@ -16,7 +16,7 @@ public class IKChainOptions
 public class IKChain
 {
     private readonly IKChainOptions _options;
-    public readonly IKChainSegment[] Segments;
+    public IKChainSegment[] Segments;
     public Vector3 RootPosition;
     
     public Vector3 EndPosition => Segments[^1].TipPosition;

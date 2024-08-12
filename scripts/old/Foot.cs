@@ -13,24 +13,24 @@ public partial class Foot : Node3D
 	
 	public override void _Ready()
 	{
-		_limb.Destination = GlobalPosition;
+		_limb.Destination = Position;
 		
 		_rayCast = GetNode<RayCast3D>("RayCast3D");
 	}
 
 	public override void _Process(double delta)
 	{
-		DebugDraw3D.DrawSphere(GlobalPosition, _acceptableRadius, new Color(0.8f, 0.8f, 0.8f, 0.1f));
+		DebugDraw3D.DrawSphere(Position, _acceptableRadius, new Color(0.8f, 0.8f, 0.8f, 0.1f));
 
 		if (_rayCast.IsColliding())
 		{
-			GlobalPosition = new Vector3(GlobalPosition.X, _rayCast.GetCollisionPoint().Y, GlobalPosition.Z);
+			Position = new Vector3(Position.X, _rayCast.GetCollisionPoint().Y, Position.Z);
 		}
 		
 		// If foot is too far away
-		if (GlobalPosition.DistanceTo(_limb.Destination) > _acceptableRadius)
+		if (Position.DistanceTo(_limb.Destination) > _acceptableRadius)
 		{
-			_limb.Destination = GlobalPosition;
+			_limb.Destination = Position;
 		}
 	}
 }

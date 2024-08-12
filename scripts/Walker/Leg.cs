@@ -34,69 +34,51 @@ public class Leg
     private Walker _walker;
     private LegOptions _options;
     
-    private Vector3 _footPosition;
     private bool _isStepping;
     private bool _isGrounded = true;
+    private Vector3 _footPositionGlobal;
     
-    private Vector3 RootPosition => _walker.GlobalTransform.Origin + _options.RootOffset.Rotated(Vector3.Up, _walker.GlobalBasis.GetEuler().Y);
-    private Vector3 DesiredFootPosition => RootPosition + _options.DesiredFootOffset.Rotated(Vector3.Up, _walker.GlobalBasis.GetEuler().Y);
+    private Vector3 RootPosition => _options.RootOffset;
+    private Vector3 IdealFootPosition => RootPosition + _options.DesiredFootOffset;
     
     private float AcceptedRadius => _walker.IsMoving ? _options.AcceptedRadius : _options.AcceptedStationaryRadius;
-    
-    private Vector3 NextStepPosition
-    {
-        get
-        {
-            var candidate = DesiredFootPosition;
-            if (!_walker.IsMoving) return candidate;
-
-            var rotAddition = DesiredFootPosition
-                .DirectionTo(RootPosition).WithY(0).Normalized()
-                .Rotated(Vector3.Up, -Mathf.Pi / 2) * _walker.YawRotationVelocity;
-            DebugDraw3D.DrawArrow(candidate, candidate + rotAddition, new Color(1, 0, 0), 0.1f);
-            candidate += rotAddition;
-
-            float nudgeDist = _walker.Velocity.WithY(0).Length() * _options.VelocityStepNudgeMultiplier;
-            candidate += _walker.Velocity.WithY(0).Normalized() * nudgeDist;
-            candidate.Y += _walker.Velocity.Y;
-
-            return DesiredFootPosition + DesiredFootPosition.DirectionTo(candidate) * Mathf.Min(AcceptedRadius, DesiredFootPosition.DistanceTo(candidate));
-        }
-    }
     
     public Leg(Walker walker, LegOptions options)
     {
         _walker = walker;
         _options = options;
         
-        _footPosition = DesiredFootPosition;
+        _footPositionGlobal = ToGlobal(IdealFootPosition);
     }
     
     public void Render(IIKChainRenderer renderer)
     {
+        // DebugDraw3D.DrawSphere(ToGlobal(RootPosition), 0.1f, new Color(0.2f, 0.2f, 0.2f));
+        // DebugDraw3D.DrawSphere(ToGlobal(IdealFootPosition), 0.1f, new Color(0.2f, 0.2f, 0.2f));
+        // DebugDraw3D.DrawSphere(_footPositionGlobal, 0.1f, new Color(0.2f, 0.2f, 0.5f));
+        // DebugDraw3D.DrawSphere(ToGlobal(GetNextStepPosition()), 0.1f, new Color(0.8f, 0.2f, 0.2f));
+        // DebugDraw3D.DrawSphere(ToGlobal(IdealFootPosition), AcceptedRadius * _walker.Scale.X, new Color(0.8f, 0.8f, 0.2f));
+        // if(_isStepping)
+        //     DebugDraw3D.DrawSphere(_footPositionGlobal, 0.5f, new Color(0.2f, 0.8f, 0.2f));
+        
         var chainOptions = new IKChainOptions { };
         var chain = new IKChain(RootPosition, _options.SegmentLength, _options.SegmentCount, chainOptions);
-        chain.PointTowardsAndUp(_footPosition, 60);
-        chain.SolveTo(_footPosition);
-        // renderer.Render(chain, _isStepping ? new Color(0, 1, 0) : new Color(1, 0, 0));
+        chain.PointTowardsAndUp(ToLocal(_footPositionGlobal), 60);
+        chain.SolveTo(ToLocal(_footPositionGlobal));
         renderer.Render(chain);
-        
-        DebugDraw3D.DrawSphere(DesiredFootPosition, 0.1f, new Color(0, 1, 0));
-        var col = new Color(1, 0, 0).Lerp(new Color(0, 0, 1), 
-            _footPosition.DistanceTo(DesiredFootPosition) / AcceptedRadius);
-        // DebugDraw3D.DrawSphere(DesiredFootPosition, AcceptedRadius, col);
-        DebugDraw3D.DrawArrow(NextStepPosition + Vector3.Up * 1, NextStepPosition, new Color(0, 1, 0), 0.1f);
     }
     
     public void Update(double delta)
     {
         if (_isStepping)
         {
-            _footPosition += _walker.Velocity * (float)delta;
-            _footPosition = _footPosition.RotatedAround(_walker.GlobalTransform.Origin, Vector3.Up, _walker.YawRotationVelocity * (float)delta);
+            var localFootPos = ToLocal(_footPositionGlobal);
+            localFootPos += _walker.Velocity * (float)delta;
+            localFootPos = localFootPos.Rotated(Vector3.Up, _walker.YawRotationVelocity * (float)delta);
+            _footPositionGlobal = ToGlobal(localFootPos);
         }
         
-        bool shouldStartNewStep = _footPosition.DistanceTo(DesiredFootPosition) > AcceptedRadius;
+        bool shouldStartNewStep = ToLocal(_footPositionGlobal).DistanceTo(IdealFootPosition) > AcceptedRadius;
         var (leg1, leg2) = _walker.GetAdjacentLegs(this);
         if (leg1._isStepping || leg2._isStepping)
             shouldStartNewStep = false;
@@ -109,15 +91,51 @@ public class Leg
     {
         _isStepping = true;
         
-        var stepPos = NextStepPosition;
-        _footPosition = _footPosition.Lerp(stepPos, 1 - Mathf.Exp(-_options.StepSpeed * (float)delta));
-        float hStepDist = _footPosition.WithY(0).DistanceTo(stepPos.WithY(0));
+        var stepDestination = GetNextStepPosition();
+        
+        var localFootPos = ToLocal(_footPositionGlobal);
+        localFootPos = localFootPos.Lerp(stepDestination, 1 - Mathf.Exp(-_options.StepSpeed * (float)delta));
+        
+        float hStepDist = localFootPos.WithY(0).DistanceTo(stepDestination.WithY(0));
         if (_options.StopDropDistance > 0 && hStepDist > _options.StopDropDistance)
-            _footPosition.Y = Mathf.Lerp(_footPosition.Y, stepPos.Y + _options.StepHeight, 
-                                        1 - Mathf.Exp(-_options.StepRaiseSpeed * (float)delta));
-
-        if (_footPosition.DistanceTo(stepPos) >= _options.FootArrivalThreshold) return;
+            localFootPos.Y = Mathf.Lerp(
+                localFootPos.Y, 
+                stepDestination.Y + _options.StepHeight, 
+                1 - Mathf.Exp(-_options.StepRaiseSpeed * (float)delta));
+        
+        _footPositionGlobal = ToGlobal(localFootPos);
+        
+        if (localFootPos.DistanceTo(stepDestination) >= _options.FootArrivalThreshold) return;
         _isStepping = false;
-        _footPosition = stepPos;
+        _footPositionGlobal = ToGlobal(stepDestination);
+    }
+    
+    private Vector3 GetNextStepPosition()
+    {
+        var candidate = IdealFootPosition;
+        if (!_walker.IsMoving) return candidate;
+
+        var rotAddition = IdealFootPosition
+            .DirectionTo(RootPosition).WithY(0).Normalized()
+            .Rotated(Vector3.Up, -Mathf.Pi / 2) * _walker.YawRotationVelocity;
+        DebugDraw3D.DrawArrow(candidate, candidate + rotAddition, new Color(1, 0, 0), 0.1f);
+        candidate += rotAddition;
+
+        float nudgeDist = _walker.Velocity.WithY(0).Length() * _options.VelocityStepNudgeMultiplier;
+        candidate += _walker.Velocity.WithY(0).Normalized() * nudgeDist;
+        candidate.Y += _walker.Velocity.Y;
+
+        return IdealFootPosition 
+               + IdealFootPosition.DirectionTo(candidate) 
+               * Mathf.Min(AcceptedRadius, IdealFootPosition.DistanceTo(candidate));
+    }
+    
+    public Vector3 ToGlobal(Vector3 localPos)
+    {
+        return _walker.ToGlobal(localPos);
+    }
+    public Vector3 ToLocal(Vector3 globalPos)
+    {
+        return _walker.ToLocal(globalPos);
     }
 }

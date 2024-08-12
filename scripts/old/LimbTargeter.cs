@@ -39,16 +39,16 @@ public partial class LimbTargeter : RayCast3D
 			DebugDraw3D.DrawSphere(_lastPoint, 0.02f, new Color(0, 1, 0));
 		}
 		foreach (var walker in _walkers)
-			walker.MovementTarget = _lastPoint;
+			walker.GlobalMovementTarget = _lastPoint;
 		
 		if (!Input.IsActionPressed("grapple")) return;
 		if (IsColliding())
 			_lastPoint = GetCollisionPoint();
 		else
 			_lastPoint = GlobalPosition + (
-				GlobalTransform.Basis.X * TargetPosition.X
-				+ GlobalTransform.Basis.Y * TargetPosition.Y
-				+ GlobalTransform.Basis.Z * TargetPosition.Z).Normalized() * TargetPosition.Length();
+				  GlobalBasis.X * TargetPosition.X
+				+ GlobalBasis.Y * TargetPosition.Y
+				+ GlobalBasis.Z * TargetPosition.Z).Normalized() * TargetPosition.Length();
 	}
 	
 	private static Vector3 SmoothMove(Vector3 from, Vector3 to, float speed, float dt)

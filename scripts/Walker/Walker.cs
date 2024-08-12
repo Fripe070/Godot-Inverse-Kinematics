@@ -27,14 +27,15 @@ public partial class Walker : Node3D
 	private PathRenderer[] _legRenderers;
 	
 	public Vector3 Velocity;
-	public float YawRotationVelocity;
-	public Vector3 MovementTarget { get; set; }
-	
-	private Vector3 ForwardVec => -GlobalTransform.Basis.Z;
+	public float YawRotationVelocity { get; private set; }
+
+	public Vector3 GlobalMovementTarget;
+	public Vector3 LocalMovementTarget => ToLocal(GlobalMovementTarget);
 	
 	public override void _Ready()
 	{
-		MovementTarget = GlobalPosition;
+		GlobalMovementTarget = GlobalPosition;
+		
 		_legs = new Leg[_legCount];
 		_legRenderers = new PathRenderer[_legCount];
 
@@ -58,12 +59,11 @@ public partial class Walker : Node3D
 
 	public override void _Process(double delta)
 	{
-		float yawToTarget = -GlobalTransform.Origin.DirectionTo(MovementTarget).WithY(0).SignedAngleTo(ForwardVec.WithY(0), Vector3.Up);
-		DebugDraw2D.SetText("YawToTarget", Mathf.RadToDeg(yawToTarget));
-		DebugDraw3D.DrawArrow(GlobalTransform.Origin, GlobalTransform.Origin + ForwardVec.Rotated(Vector3.Up, yawToTarget), new Color(0, 0, 1), 0.1f);
-		
-		YawRotationVelocity = Mathf.Min(yawToTarget, RotationAcceleration);
-		
+		float yawToTarget = -GlobalPosition
+			.DirectionTo(GlobalMovementTarget).WithY(0)
+			.SignedAngleTo(GlobalBasis.Z.WithY(0), Vector3.Up);
+		// I know this is a broken formulae, but I have not figured out gow to make it not overshoot otherwise
+		YawRotationVelocity = Mathf.Sign(yawToTarget) * Mathf.Min(RotationAcceleration, Mathf.Abs(yawToTarget));
 		RotateY(YawRotationVelocity * (float)delta);
 		
 		if (IsSignificantlyRotating)
@@ -71,25 +71,25 @@ public partial class Walker : Node3D
 		else
 			IsSignificantlyRotating = Mathf.Abs(YawRotationVelocity) >= _majorRotationThreshold;
 		
-		
-		DebugDraw3D.DrawArrow(GlobalTransform.Origin, GlobalTransform.Origin + ForwardVec, IsSignificantlyRotating ? new Color(1, 0, 1) : new Color(0.8f, 0, 0.1f) , 0.1f);
-
-		var moveDir = (MovementTarget - GlobalTransform.Origin).WithY(0);
-		moveDir = moveDir.Normalized() * Mathf.Min(moveDir.Length(), 1);  // Slow down when we start reaching the target (within 1 unit in this case)
-	
-		Velocity = moveDir * _acceleration;
+		var moveDir = LocalMovementTarget.WithY(0);
+		Velocity = moveDir.Normalized() * Mathf.Min(_acceleration, moveDir.Length());
 		if (IsSignificantlyRotating)
 			Velocity = Vector3.Zero;
-		GlobalTranslate(Velocity * (float)delta);
 		
+		Translate(Velocity * (float)delta);
 		IsMoving = Velocity.Length() >= _stationaryVelThreshold || IsSignificantlyRotating;
+		
+		// DebugDraw3D.DrawArrow(GlobalPosition, ToGlobal(Velocity), new Color(1, 1, 0), 0.1f);
+		// DebugDraw3D.DrawArrow(Position, Position + ForwardVec.Rotated(Vector3.Up, yawToTarget), new Color(0, 0, 1), 0.1f);
+		// DebugDraw3D.DrawArrow(Position, Position + ForwardVec, IsSignificantlyRotating ? new Color(1, 0, 1) : new Color(0.8f, 0, 0.7f) , 0.1f);
+		// DebugDraw3D.DrawArrow(Position + ForwardVec, Position + ForwardVec + ForwardVec.Rotated(Vector3.Up, Mathf.DegToRad(90))*YawRotationVelocity, new Color(0.4f, 0.4f, 0.4f), 0.1f);
 		
 		for (var i = 0; i < _legCount; i++)
 		{
 			_legs[i].Update(delta);
 			_legs[i].Render(_legRenderers[i]);
+			// _legs[i].Render(new DebugRenderer());
 		}
-		// DebugDraw3D.DrawArrow(GlobalTransform.Origin, GlobalTransform.Origin + Velocity, new Color(0, 1, 0), 0.1f);
 	}
 	
 	public Tuple<Leg, Leg> GetAdjacentLegs(Leg leg)
