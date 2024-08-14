@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://odhf0x2ey7e7"]
+
+[ext_resource type="Texture2D" uid="uid://ddtbhplj2rxpl" path="res://assets/models/NormalMap.png" id="1_vhlhp"]
+
+[resource]
+albedo_color = Color(0.237539, 0.237539, 0.237539, 1)
+normal_enabled = true
+normal_texture = ExtResource("1_vhlhp")
