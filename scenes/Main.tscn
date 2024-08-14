@@ -116,9 +116,11 @@ slide_friction = 0.0
 
 [node name="Limb" parent="." instance=ExtResource("2_v5hmt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.4098, 0.303925, -10.095)
+RelativeDestination = Vector3(12.4098, -0.303925, 10.095)
 
 [node name="Limb2" parent="." instance=ExtResource("2_v5hmt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.4093, 0.303925, -24.529)
+RelativeDestination = Vector3(26.4093, -0.303925, 24.529)
 _segmentCount = 50
 _segmentLength = 0.4
 _constrainSinglePlane = false

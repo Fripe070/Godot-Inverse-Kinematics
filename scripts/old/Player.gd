@@ -17,6 +17,7 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var neck := $Neck
 @onready var sway := $Neck/Sway
 @onready var camera := $Neck/Sway/Camera
+@onready var target_selector := $Neck/Sway/TargetSelector
 
 @export_group("Inputs")
 @export var forward_importance = 1.0
@@ -68,8 +69,8 @@ func _ready() -> void:
 	collider.shape.height = standing_height
 	display.mesh.height = standing_height
 
-	$Neck/TargetSelector._limbs = controlled_limbs
-	$Neck/TargetSelector._walkers = controlled_walkers
+	target_selector._limbs = controlled_limbs
+	target_selector._walkers = controlled_walkers
 	
 
 func can_jump() -> bool:
@@ -297,7 +298,7 @@ func _process(delta):
 	axis.y = 0 # Idk if this is really needed but just to be safe
 	if axis.length() > 0.1:
 		var old_rot = sway.rotation
-		var rot: float = 10.0 * flat_velocity.length() / max_ground_speed
+		var rot: float = 5.0 * flat_velocity.length() / max_ground_speed
 		sway.rotation = Vector3.ZERO
 		sway.global_rotate(axis.normalized(), -deg_to_rad(max(0, min(10, rot))))
 		sway.rotation = speed_lerp(old_rot, sway.rotation, delta, 5)

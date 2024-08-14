@@ -1,10 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dimjtkqnfcvw8"]
+[gd_scene load_steps=2 format=3 uid="uid://dimjtkqnfcvw8"]
 
 [ext_resource type="Script" path="res://scripts/old/Limb.cs" id="1_l7dfi"]
-[ext_resource type="Script" path="res://scripts/old/LimbEditorRenderer.cs" id="3_6x31h"]
 
 [node name="Limb" type="Node3D"]
 script = ExtResource("1_l7dfi")
-
-[node name="Editor Renderer" type="Node3D" parent="."]
-script = ExtResource("3_6x31h")
