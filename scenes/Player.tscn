@@ -29,7 +29,9 @@ skeleton = NodePath("../..")
 [node name="Neck" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
-[node name="Camera" type="Camera3D" parent="Neck"]
+[node name="Sway" type="Node3D" parent="Neck"]
+
+[node name="Camera" type="Camera3D" parent="Neck/Sway"]
 
 [node name="TargetSelector" type="RayCast3D" parent="Neck"]
 target_position = Vector3(0, 0, -20)

@@ -15,7 +15,8 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var max_up_angle: float = 90.0
 @export var max_down_angle: float = -90.0
 @onready var neck := $Neck
-@onready var camera := $Neck/Camera
+@onready var sway := $Neck/Sway
+@onready var camera := $Neck/Sway/Camera
 
 @export_group("Inputs")
 @export var forward_importance = 1.0
@@ -90,7 +91,7 @@ func dash():
 	var forwards: Vector3 = -camera.global_transform.basis.z.normalized()
 	if forwards.y > 0:
 		forwards.y *= dash_up_mult
-	velocity = forwards * dash_speed
+	velocity = forwards * max(dash_speed, velocity.length())
 	remaining_dashes -= 1
 
 func get_slide_friction() -> float:
@@ -290,6 +291,27 @@ func _process(delta):
 	if Input.is_action_just_pressed(&"third_person"):
 		third_person = not third_person
 	camera.position.z = 5 if third_person else 0
+	
+	var flat_velocity = Vector3(velocity.x, 0, velocity.z).normalized() * velocity.length()
+	var axis = flat_velocity.normalized().cross(sway.basis.y)
+	axis.y = 0 # Idk if this is really needed but just to be safe
+	if axis.length() > 0.1:
+		var old_rot = sway.rotation
+		var rot: float = 10.0 * flat_velocity.length() / max_ground_speed
+		sway.rotation = Vector3.ZERO
+		sway.global_rotate(axis.normalized(), -deg_to_rad(max(0, min(10, rot))))
+		sway.rotation = speed_lerp(old_rot, sway.rotation, delta, 5)
+	else:
+		sway.rotation = speed_lerp(sway.rotation, Vector3.ZERO, delta, 15)
+	
+	var offset = (Time.get_ticks_msec() / 1000.0) * 10 * min(0, max(2, velocity.length()))
+	var camera_y_disp = sin(offset) * 0.1
+	camera_y_disp *= max(0, min(1, velocity.length() - 1))
+	if is_on_ground:
+		sway.position.y = camera_y_disp
+
+func speed_lerp(from, to, delta, speed):
+	return lerp(from, to, 1 - exp(-delta * speed))
 
 	
 func _unhandled_input(event: InputEvent) -> void:
