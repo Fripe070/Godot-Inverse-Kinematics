@@ -8,7 +8,7 @@ public class IKChainOptions
 {
     public float Tolerance = 0.01f;
     public int MaxIterations = 10;
-    public bool PrioritiseEnd = true;
+    public bool PrioritiseEnd = false;
     public bool StraightIfTooFar = true;
 }
 

@@ -293,17 +293,19 @@ func _process(delta):
 		third_person = not third_person
 	camera.position.z = 5 if third_person else 0
 	
-	var flat_velocity = Vector3(velocity.x, 0, velocity.z).normalized() * velocity.length()
+	var flat_velocity = Vector3(velocity.x, 0, velocity.z)#.normalized() * velocity.length()
 	var axis = flat_velocity.normalized().cross(sway.basis.y)
 	axis.y = 0 # Idk if this is really needed but just to be safe
-	if axis.length() > 0.1:
+	if axis.length() < 0.1:
+		sway.rotation = speed_lerp(sway.rotation, Vector3.ZERO, delta, 15)
+	elif velocity.y < -flat_velocity.length():  # If we are falling we want to see where we are going to land
+		sway.rotation = speed_lerp(sway.rotation, Vector3.ZERO, delta, 5)
+	else:
 		var old_rot = sway.rotation
 		var rot: float = 5.0 * flat_velocity.length() / max_ground_speed
 		sway.rotation = Vector3.ZERO
 		sway.global_rotate(axis.normalized(), -deg_to_rad(max(0, min(10, rot))))
 		sway.rotation = speed_lerp(old_rot, sway.rotation, delta, 5)
-	else:
-		sway.rotation = speed_lerp(sway.rotation, Vector3.ZERO, delta, 15)
 	
 	var offset = (Time.get_ticks_msec() / 1000.0) * 10 * min(0, max(2, velocity.length()))
 	var camera_y_disp = sin(offset) * 0.1
@@ -312,6 +314,8 @@ func _process(delta):
 		sway.position.y = camera_y_disp
 		
 	DebugDraw2D.set_text("Velocity", velocity.length())
+	DebugDraw2D.set_text("Velocity Y", velocity.y)
+	DebugDraw2D.set_text("Velocity Flat", flat_velocity.length())
 
 func speed_lerp(from, to, delta, speed):
 	return lerp(from, to, 1 - exp(-delta * speed))

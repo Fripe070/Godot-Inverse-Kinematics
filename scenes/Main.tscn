@@ -108,11 +108,6 @@ shape = SubResource("ConcavePolygonShape3D_bsldr")
 controlled_limbs = [NodePath("../Limb"), NodePath("../Limb2")]
 controlled_walkers = [NodePath("../Walker")]
 auto_jump = true
-friction = 1000.0
-stop_speed = 1.0
-dash_speed = 16.0
-dash_up_mult = 0.75
-slide_friction = 0.0
 
 [node name="Limb" parent="." instance=ExtResource("2_v5hmt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.4098, 0.303925, -10.095)

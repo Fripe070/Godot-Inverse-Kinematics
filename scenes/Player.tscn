@@ -16,6 +16,8 @@ script = ExtResource("1_quoh7")
 collider = NodePath("CollisionShape3D")
 display = NodePath("CollisionShape3D/MeshInstance3D")
 gravity_mult = 1.05
+dash_speed = 16.0
+dash_up_mult = 0.75
 low_friction_time = 3.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

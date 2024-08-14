@@ -1,6 +1,8 @@
-using Godot;
 using System;
+using Godot;
 using Kinematics.scripts.old;
+
+namespace Kinematics.scripts;
 
 public partial class LimbTarget : Node3D
 {
