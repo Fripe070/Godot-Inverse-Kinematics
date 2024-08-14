@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 using Kinematics.scripts.Render;
 
@@ -90,6 +91,9 @@ public partial class Walker : Node3D
 			_legs[i].Render(_legRenderers[i]);
 			// _legs[i].Render(new DebugRenderer());
 		}
+		
+		// float averageLegY = _legs.Average(leg => leg.FootPositionGlobal.Y);
+		// GlobalPosition = new Vector3(GlobalPosition.X, averageLegY + 1f, GlobalPosition.Z);
 	}
 	
 	public Tuple<Leg, Leg> GetAdjacentLegs(Leg leg)

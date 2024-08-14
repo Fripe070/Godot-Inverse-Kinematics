@@ -36,7 +36,7 @@ public class Leg
     
     private bool _isStepping;
     private bool _isGrounded = true;
-    private Vector3 _footPositionGlobal;
+    public Vector3 FootPositionGlobal { get; private set; }
     
     private Vector3 RootPosition => _options.RootOffset;
     private Vector3 IdealFootPosition => RootPosition + _options.DesiredFootOffset;
@@ -48,7 +48,7 @@ public class Leg
         _walker = walker;
         _options = options;
         
-        _footPositionGlobal = ToGlobal(IdealFootPosition);
+        FootPositionGlobal = ToGlobal(IdealFootPosition);
     }
     
     public void Render(IIKChainRenderer renderer)
@@ -63,8 +63,8 @@ public class Leg
         
         var chainOptions = new IKChainOptions { };
         var chain = new IKChain(RootPosition, _options.SegmentLength, _options.SegmentCount, chainOptions);
-        chain.PointTowardsAndUp(ToLocal(_footPositionGlobal), 60);
-        chain.SolveTo(ToLocal(_footPositionGlobal));
+        chain.PointTowardsAndUp(ToLocal(FootPositionGlobal), 60);
+        chain.SolveTo(ToLocal(FootPositionGlobal));
         renderer.Render(chain);
     }
     
@@ -72,13 +72,13 @@ public class Leg
     {
         if (_isStepping)
         {
-            var localFootPos = ToLocal(_footPositionGlobal);
+            var localFootPos = ToLocal(FootPositionGlobal);
             localFootPos += _walker.Velocity * (float)delta;
             localFootPos = localFootPos.Rotated(Vector3.Up, _walker.YawRotationVelocity * (float)delta);
-            _footPositionGlobal = ToGlobal(localFootPos);
+            FootPositionGlobal = ToGlobal(localFootPos);
         }
         
-        bool shouldStartNewStep = ToLocal(_footPositionGlobal).DistanceTo(IdealFootPosition) > AcceptedRadius;
+        bool shouldStartNewStep = ToLocal(FootPositionGlobal).DistanceTo(IdealFootPosition) > AcceptedRadius;
         var (leg1, leg2) = _walker.GetAdjacentLegs(this);
         if (leg1._isStepping || leg2._isStepping)
             shouldStartNewStep = false;
@@ -92,8 +92,9 @@ public class Leg
         _isStepping = true;
         
         var stepDestination = GetNextStepPosition();
+        // stepDestination = GetFloorAt(stepDestination);
         
-        var localFootPos = ToLocal(_footPositionGlobal);
+        var localFootPos = ToLocal(FootPositionGlobal);
         localFootPos = localFootPos.Lerp(stepDestination, 1 - Mathf.Exp(-_options.StepSpeed * (float)delta));
         
         float hStepDist = localFootPos.WithY(0).DistanceTo(stepDestination.WithY(0));
@@ -103,11 +104,11 @@ public class Leg
                 stepDestination.Y + _options.StepHeight, 
                 1 - Mathf.Exp(-_options.StepRaiseSpeed * (float)delta));
         
-        _footPositionGlobal = ToGlobal(localFootPos);
+        FootPositionGlobal = ToGlobal(localFootPos);
         
         if (localFootPos.DistanceTo(stepDestination) >= _options.FootArrivalThreshold) return;
         _isStepping = false;
-        _footPositionGlobal = ToGlobal(stepDestination);
+        FootPositionGlobal = ToGlobal(stepDestination);
     }
     
     private Vector3 GetNextStepPosition()
@@ -118,7 +119,6 @@ public class Leg
         var rotAddition = IdealFootPosition
             .DirectionTo(RootPosition).WithY(0).Normalized()
             .Rotated(Vector3.Up, -Mathf.Pi / 2) * _walker.YawRotationVelocity;
-        DebugDraw3D.DrawArrow(candidate, candidate + rotAddition, new Color(1, 0, 0), 0.1f);
         candidate += rotAddition;
 
         float nudgeDist = _walker.Velocity.WithY(0).Length() * _options.VelocityStepNudgeMultiplier;
@@ -128,6 +128,23 @@ public class Leg
         return IdealFootPosition 
                + IdealFootPosition.DirectionTo(candidate) 
                * Mathf.Min(AcceptedRadius, IdealFootPosition.DistanceTo(candidate));
+    }
+
+    private Vector3 GetFloorAt(Vector3 position)
+    {
+        const float range = 1.0f;
+        var startPos = ToGlobal(position + Vector3.Up * range);
+        var endPos = ToGlobal(position + Vector3.Down * range);
+        
+        var spaceState = _walker.GetWorld3D().DirectSpaceState;
+        var query = PhysicsRayQueryParameters3D.Create(startPos, endPos);
+        var result = spaceState.IntersectRay(query);
+
+        if (result.Count <= 0) return position;
+        
+        DebugDraw3D.DrawArrow(startPos, endPos, new Color(0.4f, 0.4f, 0.4f), 0.1f);
+        DebugDraw3D.DrawSphere(result["position"].AsVector3(), 0.2f, new Color(0.2f, 0.8f, 0.2f));
+        return ToLocal(result["position"].AsVector3());
     }
     
     public Vector3 ToGlobal(Vector3 localPos)

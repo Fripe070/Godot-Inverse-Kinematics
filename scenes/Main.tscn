@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://5o1x2u3d0nfv"]
+[gd_scene load_steps=13 format=3 uid="uid://5o1x2u3d0nfv"]
 
 [ext_resource type="PackedScene" uid="uid://d1rf8jxqx2lvx" path="res://scenes/Player.tscn" id="1_mykwi"]
 [ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_v5hmt"]
@@ -30,6 +30,9 @@ data = PackedVector3Array(0, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0, 0.5, 
 
 [sub_resource type="BoxMesh" id="BoxMesh_jf1v0"]
 
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_bsldr"]
+data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+
 [node name="Node3D" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -52,7 +55,7 @@ visible = false
 mesh = SubResource("PlaneMesh_l8oow")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Static"]
-transform = Transform3D(50.04, 0, 0, 0, 7.795, 0, 0, 0, 4.11, 37.635, 3.643, 0)
+transform = Transform3D(50.04, 0, 0, 0, 7.795, 0, 0, 0, 12.6042, 37.635, 3.643, 0)
 mesh = SubResource("PrismMesh_pbnib")
 skeleton = NodePath("../..")
 
@@ -81,6 +84,26 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Static/MeshInstance3D3/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_0e4of")
 
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Static"]
+transform = Transform3D(3.88576, 0, -0.00796029, -0.0722231, 5.55597, -0.397741, 0.020013, 20.0505, 0.110214, -6.10921, 0.638071, 25.154)
+mesh = SubResource("BoxMesh_jf1v0")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Static/MeshInstance3D4"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static/MeshInstance3D4/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_bsldr")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Static"]
+transform = Transform3D(4.26013, 0, -0.00793377, -0.0791815, 5.55597, -0.396415, 0.0219411, 20.0505, 0.109846, 0.294054, 0.638071, 25.154)
+mesh = SubResource("BoxMesh_jf1v0")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Static/MeshInstance3D5"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static/MeshInstance3D5/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_bsldr")
+
 [node name="Player" parent="." node_paths=PackedStringArray("controlled_limbs", "controlled_walkers") instance=ExtResource("1_mykwi")]
 controlled_limbs = [NodePath("../Limb"), NodePath("../Limb2")]
 controlled_walkers = [NodePath("../Walker")]
@@ -101,5 +124,6 @@ _segmentLength = 0.4
 _constrainSinglePlane = false
 
 [node name="Walker" parent="." instance=ExtResource("3_b2lli")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 _legSegmentLength = 0.5
 _legSegmentCount = 8
