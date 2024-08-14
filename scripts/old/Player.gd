@@ -310,6 +310,8 @@ func _process(delta):
 	camera_y_disp *= max(0, min(1, velocity.length() - 1))
 	if is_on_ground:
 		sway.position.y = camera_y_disp
+		
+	DebugDraw2D.set_text("Velocity", velocity.length())
 
 func speed_lerp(from, to, delta, speed):
 	return lerp(from, to, 1 - exp(-delta * speed))

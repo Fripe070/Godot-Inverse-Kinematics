@@ -104,6 +104,8 @@ public class IKChain
     {
         var direction = (target - RootPosition).WithY(0).Normalized();
         var axis = Vector3.Up.Cross(direction).Normalized();
+        if (axis.Length() < 0.01f)
+            return;
         PointIn(direction.Rotated(axis, Mathf.DegToRad(-upAngle)));
     }
 }

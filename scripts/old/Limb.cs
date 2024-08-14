@@ -39,7 +39,13 @@ public partial class Limb : Node3D
         if (Engine.IsEditorHint())
         {
             DebugDraw3D.DrawSphere(GlobalPosition, 0.1f, new Color(1, 1, 1));
-            DebugDraw3D.DrawSphere(GlobalPosition, TotalLength, new Color(1, 1, 1));
+            DebugDraw3D.DrawSphere(GlobalPosition, TotalLength, new Color(0.5f, 0.5f, 0.5f));
+            DebugDraw3D.DrawArrowRay(GlobalPosition, Vector3.Forward, TotalLength, new Color(1, 1, 1), 0);
+            DebugDraw3D.DrawArrowRay(GlobalPosition, Vector3.Left, TotalLength, new Color(1, 1, 1), 0);
+            DebugDraw3D.DrawArrowRay(GlobalPosition, Vector3.Back, TotalLength, new Color(1, 1, 1), 0);
+            DebugDraw3D.DrawArrowRay(GlobalPosition, Vector3.Right, TotalLength, new Color(1, 1, 1), 0);
+            DebugDraw3D.DrawArrowRay(GlobalPosition, Vector3.Up, TotalLength, new Color(1, 1, 1), 0);
+            DebugDraw3D.DrawArrowRay(GlobalPosition, Vector3.Down, TotalLength, new Color(1, 1, 1), 0);
             return;
         }
         
