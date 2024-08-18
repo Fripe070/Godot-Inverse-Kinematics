@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://5bbecta62rw5"]
 
-[ext_resource type="Script" path="res://scripts/Floater/Floater.cs" id="1_notlx"]
+[ext_resource type="Script" path="res://scripts/creature/Floater/Floater.cs" id="1_notlx"]
 [ext_resource type="Shader" uid="uid://bi7flj83ybc67" path="res://assets/materials/shaders/FloaterRing.tres" id="1_rqpm7"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_p0jgp"]
