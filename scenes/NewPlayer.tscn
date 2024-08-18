@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://ct7nr7wjk575c"]
+
+[ext_resource type="Script" path="res://scripts/player/Player.cs" id="1_wltsb"]
+[ext_resource type="Script" path="res://scripts/player/LookController.cs" id="2_yfmsv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pmjbe"]
+radius = 0.45
+
+[node name="NewPlayer" type="CharacterBody3D"]
+script = ExtResource("1_wltsb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_pmjbe")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+
+[node name="LookController" type="Node" parent="CameraPivot" node_paths=PackedStringArray("_pitchPivot", "_yawPivot")]
+script = ExtResource("2_yfmsv")
+_pitchPivot = NodePath("..")
+_yawPivot = NodePath("../..")
+_sensitivity = 10.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+fov = 90.0

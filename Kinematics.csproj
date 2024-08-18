@@ -6,7 +6,6 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="scripts\Floater\" />
     <Folder Include="scripts\old\" />
   </ItemGroup>
 </Project>

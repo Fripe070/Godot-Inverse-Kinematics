@@ -320,7 +320,7 @@ func _process(delta):
 func speed_lerp(from, to, delta, speed):
 	return lerp(from, to, 1 - exp(-delta * speed))
 
-	
+				
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
