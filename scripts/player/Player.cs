@@ -3,11 +3,21 @@ using Godot;
 
 namespace Kinematics.scripts.player;
 
+enum JumpMode
+{
+	Set,
+	Add,
+	Max,
+	MaxAdd
+}
+
+
 public partial class Player : CharacterBody3D
 {
 	[Export] private bool _shouldSurf = false; // Allow for source-like surfing. Not completely accurate since we're is based on q3, but close enough?
 	
 	[ExportGroup("Jumping")]
+	[Export] private JumpMode _jumpMode = JumpMode.Set;
 	[Export] private float _jumpVelocity = 7 ;  // m/s
 	[Export] private bool _allowHold = false;
 	[Export] private float _jumpBufferTime = 0; // seconds
@@ -20,8 +30,9 @@ public partial class Player : CharacterBody3D
 	[Export] private float _groundStopSpeed = 2.5f;  // m/s // Minimum velocity used when calculating ground friction.
 	[Export] private float _groundFriction = 6;  // m/s
 	[Export] private float _airFriction = 0;  // m/s
-	[Export] private float _groundAcceleration = 380;  // m/s/s
-	[Export] private float _airAcceleration = 40;  // m/s/s
+	[Export] private float _groundAccelerationScalar = 10;  // m/s/s
+	[Export] private float _airAccelerationScalar = 1;  // m/s/s
+	[Export] private float _moveSpeed = 3.4f;  // m/s
 	[Export] private Vector4 _moveDirScalar = new(1, 1, 1, 1);  // Front, back, left, right
 	
 	private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -55,7 +66,7 @@ public partial class Player : CharacterBody3D
 		ApplyFriction(delta);
 
 		var inputDir = TransformInput(GetInputDir());
-		Accelerate(inputDir, _groundAcceleration, delta);
+		Accelerate(inputDir, _airAccelerationScalar, delta);
 		// TODO: Write rest
 		StepSlideMove(delta);
 	}
@@ -77,7 +88,7 @@ public partial class Player : CharacterBody3D
 		if (IsCrouched)
 			speed = Mathf.Min(Velocity.Length() * _crouchSpeedScale, speed);
 
-		Accelerate(inputDir.Normalized() * speed, _groundAcceleration, delta);
+		Accelerate(inputDir.Normalized() * speed, _groundAccelerationScalar, delta);
 		// TODO: Write rest
 		StepSlideMove(delta);
 	}
@@ -124,7 +135,15 @@ public partial class Player : CharacterBody3D
 	{
 		if (!IsGrounded || _triedJumpAgo > _jumpBufferTime) return false;
 
-		Velocity = new Vector3(Velocity.X, _jumpVelocity, Velocity.Z);
+		Velocity = _jumpMode switch
+		{
+			JumpMode.Set => new Vector3(Velocity.X, _jumpVelocity, Velocity.Z),
+			JumpMode.Add => new Vector3(Velocity.X, Velocity.Y + _jumpVelocity, Velocity.Z),
+			JumpMode.Max => new Vector3(Velocity.X, Mathf.Max(Velocity.Y, _jumpVelocity), Velocity.Z),
+			JumpMode.MaxAdd => new Vector3(Velocity.X, Mathf.Max(0, Velocity.Y) + _jumpVelocity, Velocity.Z),
+			_ => throw new ArgumentOutOfRangeException()
+		};
+
 		IsGrounded = false;
 		EmitSignal(SignalName.Jumped);
 		return true;
@@ -161,7 +180,7 @@ public partial class Player : CharacterBody3D
 		return dir;
 	}
 
-	private Vector3 TransformInput(Vector2 inputDir)
+	private Vector3 TransformInput(Vector2 inputVec)
 	{
 		var forwardVec = -Transform.Basis.Z;
 		var rightVec = Transform.Basis.X;
@@ -178,8 +197,9 @@ public partial class Player : CharacterBody3D
 		forwardVec = forwardVec.Normalized();
 		rightVec = rightVec.Normalized();
 		
-		var vec = forwardVec * inputDir.Y + rightVec * inputDir.X;
-		return vec * 5;  // TODO: WHy is the player so slow if I dont add this? - I want movement values to be accurately scaled to their quake counterparts, and 10 is arbitrary here
+		inputVec *= _moveSpeed;
+		var vec = forwardVec * inputVec.Y + rightVec * inputVec.X;
+		return vec;
 	}
 
 	private Vector3 ClipVelocity(Vector3 vec, Vector3 normal, float overBounce)
