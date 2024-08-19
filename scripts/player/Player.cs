@@ -37,6 +37,7 @@ public partial class Player : CharacterBody3D
 	[Export] private bool _useGodotGravity = false;
 	[Export] private float _gravityStrength = 21.25f;
 	[Export] private float _overBounce = 1.001f;
+	[Export] private float _rampSlideThreshold = 4.8f;  // m/s upwards
 	
 	private float _godotGravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private float Gravity => _useGodotGravity ? _godotGravity : _gravityStrength;
@@ -50,9 +51,12 @@ public partial class Player : CharacterBody3D
 	[Signal] public delegate void JumpedEventHandler();
 	[Signal] public delegate void LandedEventHandler();
 
+	// TODO: Stairs :skull:
+	// TODO: Don't seem to be launching off of slopes like I want? Ramp-sliding doesn't quite work...
 	public override void _PhysicsProcess(double delta)
 	{
 		DebugDraw2D.SetText("Velocity (var)", Velocity);
+		DebugDraw2D.SetText("Velocity (Y)", Velocity.Y);
 		if (IsDisabled) return;
 		
 		if (Input.IsActionPressed("jump") || (_allowHold && Input.IsActionPressed("jump")))
@@ -163,6 +167,9 @@ public partial class Player : CharacterBody3D
 	{
 		// This method will also be used for detecting the material we're walking on and whatever later
 		bool newGrounded = IsOnFloor();
+		if (Velocity.Y > _rampSlideThreshold)
+			newGrounded = false;
+		
 		if (!IsGrounded && newGrounded)
 			EmitSignal(SignalName.Landed);
 		IsGrounded = newGrounded;

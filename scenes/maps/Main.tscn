@@ -98,6 +98,16 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Static/MeshInstance3D4/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_bsldr")
 
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Static"]
+transform = Transform3D(2.70746, -3.8781, -0.06703, -0.0719422, 1.51132, -0.317522, 2.76622, 3.83503, 0.0573481, -15.07, 0.312624, 8.34918)
+mesh = SubResource("BoxMesh_jf1v0")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Static/MeshInstance3D6"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static/MeshInstance3D6/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_bsldr")
+
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="Static"]
 transform = Transform3D(4.26013, 0, -0.00793377, -0.0791815, 5.55597, -0.396415, 0.0219411, 20.0505, 0.109846, 0.294054, 0.638071, 25.154)
 mesh = SubResource("BoxMesh_jf1v0")
@@ -109,7 +119,8 @@ skeleton = NodePath("../..")
 shape = SubResource("ConcavePolygonShape3D_bsldr")
 
 [node name="NewPlayer" parent="." instance=ExtResource("2_d5ayq")]
-_groundStopSpeed = 0.0
+_groundStopSpeed = 24.645
+_groundFriction = 1.0
 _airAccelerationScalar = 1000.0
 
 [node name="Limb" parent="." instance=ExtResource("3_cnnuw")]
