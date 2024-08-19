@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://5o1x2u3d0nfv"]
+[gd_scene load_steps=15 format=3 uid="uid://5o1x2u3d0nfv"]
 
+[ext_resource type="Texture2D" uid="uid://c34x6l7lgfgsb" path="res://assets/textures/dev/kenney_prototype_dark_grid.png" id="1_pkhcl"]
 [ext_resource type="PackedScene" uid="uid://ct7nr7wjk575c" path="res://scenes/NewPlayer.tscn" id="1_rleic"]
 [ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_v5hmt"]
 [ext_resource type="PackedScene" uid="uid://ckwn8jy4ry5if" path="res://scenes/Walker.tscn" id="3_b2lli"]
@@ -20,8 +21,13 @@ glow_enabled = true
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_4kt2x"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_l8oow"]
-size = Vector2(16, 16)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m6xqs"]
+albedo_texture = ExtResource("1_pkhcl")
+uv1_scale = Vector3(50, 50, 50)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_dhc0s"]
+material = SubResource("StandardMaterial3D_m6xqs")
+size = Vector2(300, 300)
 
 [sub_resource type="PrismMesh" id="PrismMesh_pbnib"]
 
@@ -50,9 +56,7 @@ shadow_enabled = true
 shape = SubResource("WorldBoundaryShape3D_4kt2x")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Static/Ground"]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
-visible = false
-mesh = SubResource("PlaneMesh_l8oow")
+mesh = SubResource("PlaneMesh_dhc0s")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Static"]
 transform = Transform3D(50.04, 0, 0, 0, 7.795, 0, 0, 0, 12.6042, 37.635, 3.643, 0)
