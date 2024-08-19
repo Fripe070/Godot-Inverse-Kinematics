@@ -36,6 +36,7 @@ public partial class Player : CharacterBody3D
 	[Export] private Vector4 _moveDirScalar = new(1, 1, 1, 1);  // Front, back, left, right
 	[Export] private bool _useGodotGravity = false;
 	[Export] private float _gravityStrength = 21.25f;
+	[Export] private float _overBounce = 1.001f;
 	
 	private float _godotGravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private float Gravity => _useGodotGravity ? _godotGravity : _gravityStrength;
@@ -49,12 +50,8 @@ public partial class Player : CharacterBody3D
 	[Signal] public delegate void JumpedEventHandler();
 	[Signal] public delegate void LandedEventHandler();
 
-	private Vector3 _oldPos;
-
 	public override void _PhysicsProcess(double delta)
 	{
-		DebugDraw2D.SetText("Velocity", _oldPos.DistanceTo(GlobalPosition) / delta);
-		_oldPos = GlobalPosition;
 		if (IsDisabled) return;
 		
 		if (Input.IsActionPressed("jump") || (_allowHold && Input.IsActionPressed("jump")))
@@ -63,17 +60,18 @@ public partial class Player : CharacterBody3D
 			_triedJumpAgo += delta;
 		
 		GroundedCheck();
-		// if (IsGrounded)
-		// 	GroundMove(delta);
-		// else
-		// 	AirMove(delta);
-		GroundMove(delta);
+		if (IsGrounded)
+			GroundMove(delta);
+		else
+			AirMove(delta);
+		
 		DebugDraw2D.SetText("IsGrounded", IsGrounded);
 		DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
 	}
 
 	private void AirMove(double delta)
 	{
+		DebugDraw2D.SetText("Mode", "Air");
 		ApplyFriction(delta);
 
 		var inputDir = TransformInput(GetInputDir());
@@ -89,6 +87,7 @@ public partial class Player : CharacterBody3D
 			AirMove(delta);
 			return;
 		}
+		DebugDraw2D.SetText("Mode", "Ground");
 		
 		ApplyFriction(delta);
 
@@ -106,8 +105,6 @@ public partial class Player : CharacterBody3D
 
 	private void Accelerate(Vector3 wishVel, float accel, double delta)
 	{
-		wishVel *= 10;
-		
 		var wishDir = wishVel.Normalized();
 		float wishSpeed = wishVel.Length();
 		
@@ -182,7 +179,7 @@ public partial class Player : CharacterBody3D
 	public Vector2 GetInputDir()
 	{
 		var dir = Input.GetVector("move_left", "move_right", "move_backward", "move_forward");
-		dir = dir.Normalized();
+		dir *= _moveSpeed;
 		if (_moveDirScalar.Equals(new Vector4(1, 1, 1, 1))) 
 			return dir;
 		
@@ -202,19 +199,19 @@ public partial class Player : CharacterBody3D
 		var forwardVec = -Transform.Basis.Z;
 		var rightVec = Transform.Basis.X;
 		forwardVec.Y = rightVec.Y = 0;
+
 		if (IsGrounded)
 		{
-			forwardVec = ClipVelocity(forwardVec, GetFloorNormal(), 1.001f);
-			rightVec = ClipVelocity(rightVec, GetFloorNormal(), 1.001f);
+			forwardVec = ClipVelocity(forwardVec, GetFloorNormal(), _overBounce);
+			rightVec = ClipVelocity(rightVec, GetFloorNormal(), _overBounce);
 		} else if (IsOnWall() && _shouldSurf)
 		{
-			forwardVec = ClipVelocity(forwardVec, GetWallNormal(), 1.001f);
-			rightVec = ClipVelocity(rightVec, GetWallNormal(), 1.001f);
+			forwardVec = ClipVelocity(forwardVec, GetWallNormal(), _overBounce);
+			rightVec = ClipVelocity(rightVec, GetWallNormal(), _overBounce);
 		}
 		forwardVec = forwardVec.Normalized();
 		rightVec = rightVec.Normalized();
 		
-		inputVec *= _moveSpeed;
 		var vec = forwardVec * inputVec.Y + rightVec * inputVec.X;
 		return vec;
 	}
