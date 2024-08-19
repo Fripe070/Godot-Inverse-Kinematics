@@ -52,6 +52,7 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		DebugDraw2D.SetText("Velocity (var)", Velocity);
 		if (IsDisabled) return;
 		
 		if (Input.IsActionPressed("jump") || (_allowHold && Input.IsActionPressed("jump")))
@@ -65,7 +66,6 @@ public partial class Player : CharacterBody3D
 		else
 			AirMove(delta);
 		
-		DebugDraw2D.SetText("IsGrounded", IsGrounded);
 		DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
 	}
 

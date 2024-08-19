@@ -12,7 +12,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_wltsb")
 _shouldSurf = true
 _allowHold = true
-_airAccelerationScalar = 10.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_pmjbe")
