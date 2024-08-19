@@ -7,7 +7,7 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pmjbe"]
 radius = 0.45
 
-[node name="NewPlayer" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_wltsb")
 _shouldSurf = true

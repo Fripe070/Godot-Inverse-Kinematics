@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://5o1x2u3d0nfv"]
 
 [ext_resource type="Texture2D" uid="uid://c34x6l7lgfgsb" path="res://assets/textures/dev/kenney_prototype_dark_grid.png" id="1_pkhcl"]
-[ext_resource type="PackedScene" uid="uid://ct7nr7wjk575c" path="res://scenes/NewPlayer.tscn" id="1_rleic"]
+[ext_resource type="PackedScene" uid="uid://ct7nr7wjk575c" path="res://scenes/player.tscn" id="1_rleic"]
 [ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_v5hmt"]
 [ext_resource type="PackedScene" uid="uid://ckwn8jy4ry5if" path="res://scenes/Walker.tscn" id="3_b2lli"]
 
