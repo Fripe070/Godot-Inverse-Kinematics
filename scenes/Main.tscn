@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://5o1x2u3d0nfv"]
 
-[ext_resource type="PackedScene" uid="uid://d1rf8jxqx2lvx" path="res://scenes/Player.tscn" id="1_mykwi"]
+[ext_resource type="PackedScene" uid="uid://ct7nr7wjk575c" path="res://scenes/NewPlayer.tscn" id="1_rleic"]
 [ext_resource type="PackedScene" uid="uid://dimjtkqnfcvw8" path="res://scenes/limb.tscn" id="2_v5hmt"]
 [ext_resource type="PackedScene" uid="uid://ckwn8jy4ry5if" path="res://scenes/Walker.tscn" id="3_b2lli"]
 
@@ -104,10 +104,8 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Static/MeshInstance3D5/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_bsldr")
 
-[node name="Player" parent="." node_paths=PackedStringArray("controlled_limbs", "controlled_walkers") instance=ExtResource("1_mykwi")]
-controlled_limbs = [NodePath("../Limb"), NodePath("../Limb2")]
-controlled_walkers = [NodePath("../Walker")]
-auto_jump = true
+[node name="NewPlayer" parent="." instance=ExtResource("1_rleic")]
+_moveSpeed = 5.0
 
 [node name="Limb" parent="." instance=ExtResource("2_v5hmt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.4098, 0.303925, -10.095)

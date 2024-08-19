@@ -34,18 +34,29 @@ public partial class Player : CharacterBody3D
 	[Export] private float _airAccelerationScalar = 1;  // m/s/s
 	[Export] private float _moveSpeed = 3.4f;  // m/s
 	[Export] private Vector4 _moveDirScalar = new(1, 1, 1, 1);  // Front, back, left, right
+	[Export] private bool _useGodotGravity = false;
+	[Export] private float _gravityStrength = 21.25f;
 	
-	private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	private float _godotGravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	private float Gravity => _useGodotGravity ? _godotGravity : _gravityStrength;
 	
 	// State
 	public bool IsGrounded { get; private set; }
 	public bool IsCrouched { get; private set; }
 	private double _triedJumpAgo = 0;
+	public bool IsDisabled = false;
 	
 	[Signal] public delegate void JumpedEventHandler();
-	
+	[Signal] public delegate void LandedEventHandler();
+
+	private Vector3 _oldPos;
+
 	public override void _PhysicsProcess(double delta)
 	{
+		DebugDraw2D.SetText("Velocity", _oldPos.DistanceTo(GlobalPosition) / delta);
+		_oldPos = GlobalPosition;
+		if (IsDisabled) return;
+		
 		if (Input.IsActionPressed("jump") || (_allowHold && Input.IsActionPressed("jump")))
 			_triedJumpAgo = 0;
 		else
@@ -95,6 +106,8 @@ public partial class Player : CharacterBody3D
 
 	private void Accelerate(Vector3 wishVel, float accel, double delta)
 	{
+		wishVel *= 10;
+		
 		var wishDir = wishVel.Normalized();
 		float wishSpeed = wishVel.Length();
 		
@@ -152,20 +165,24 @@ public partial class Player : CharacterBody3D
 	private void GroundedCheck()
 	{
 		// This method will also be used for detecting the material we're walking on and whatever later
-		IsGrounded = IsOnFloor();
+		bool newGrounded = IsOnFloor();
+		if (!IsGrounded && newGrounded)
+			EmitSignal(SignalName.Landed);
+		IsGrounded = newGrounded;
 	}
 
 	private void StepSlideMove(double delta)
 	{
 		var newVel = Velocity;
-		newVel.Y -= _gravity * (float)delta;
+		newVel.Y -= Gravity * (float)delta;
 		Velocity = newVel;
 		MoveAndSlide();
 	}
 
-	private Vector2 GetInputDir()
+	public Vector2 GetInputDir()
 	{
 		var dir = Input.GetVector("move_left", "move_right", "move_backward", "move_forward");
+		dir = dir.Normalized();
 		if (_moveDirScalar.Equals(new Vector4(1, 1, 1, 1))) 
 			return dir;
 		

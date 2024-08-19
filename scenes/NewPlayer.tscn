@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ct7nr7wjk575c"]
+[gd_scene load_steps=5 format=3 uid="uid://ct7nr7wjk575c"]
 
 [ext_resource type="Script" path="res://scripts/player/Player.cs" id="1_wltsb"]
 [ext_resource type="Script" path="res://scripts/player/LookController.cs" id="2_yfmsv"]
+[ext_resource type="Script" path="res://scripts/player/NoClip.cs" id="3_y086f"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pmjbe"]
 radius = 0.45
@@ -27,3 +28,9 @@ _sensitivity = 10.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
 fov = 90.0
+
+[node name="NoClip" type="Node" parent="." node_paths=PackedStringArray("_cameraTransform", "_playerController", "_colliders")]
+script = ExtResource("3_y086f")
+_cameraTransform = NodePath("../CameraPivot")
+_playerController = NodePath("..")
+_colliders = [NodePath("../CollisionShape3D")]
