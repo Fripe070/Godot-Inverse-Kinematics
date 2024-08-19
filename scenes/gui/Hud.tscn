@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7a48ojwrwh71"]
+
+[ext_resource type="PackedScene" uid="uid://bspq67lbx8fsf" path="res://scenes/gui/wasd_controls.tscn" id="1_27nov"]
+
+[node name="Hud" type="CanvasLayer"]
+
+[node name="WASD Controls" parent="." instance=ExtResource("1_27nov")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -134.0
+offset_right = 64.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="WASD Controls"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://ct7nr7wjk575c"]
+[gd_scene load_steps=6 format=3 uid="uid://ct7nr7wjk575c"]
 
 [ext_resource type="Script" path="res://scripts/player/Player.cs" id="1_wltsb"]
 [ext_resource type="Script" path="res://scripts/player/LookController.cs" id="2_yfmsv"]
 [ext_resource type="Script" path="res://scripts/player/NoClip.cs" id="3_y086f"]
+[ext_resource type="PackedScene" uid="uid://c7a48ojwrwh71" path="res://scenes/gui/Hud.tscn" id="4_tdq4d"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pmjbe"]
 radius = 0.45
@@ -33,3 +34,5 @@ script = ExtResource("3_y086f")
 _cameraTransform = NodePath("../CameraPivot")
 _playerController = NodePath("..")
 _colliders = [NodePath("../CollisionShape3D")]
+
+[node name="Hud" parent="." instance=ExtResource("4_tdq4d")]
