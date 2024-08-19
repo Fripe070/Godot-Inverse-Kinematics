@@ -17,6 +17,18 @@ public partial class NoClip : Node
 	
 	private ProcessModeEnum[] _colliderOldState;
 	public bool IsNoClipping { get; private set; }
+	
+	public override void _Input(InputEvent @event)
+	{
+		if (!IsNoClipping) return;
+		if (@event is not InputEventMouseButton { Pressed: true } mouseEvent) return;
+		_noClipSpeed *= mouseEvent.ButtonIndex switch
+		{
+			MouseButton.WheelDown => 0.9f,
+			MouseButton.WheelUp => 1.1f,
+			_ => 1.0f
+		};
+	}
 
 	public override void _Process(double delta)
 	{
