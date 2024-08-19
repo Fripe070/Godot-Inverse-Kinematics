@@ -61,14 +61,14 @@ public partial class Floater : RigidBody3D
 			var dir = rayCast.GetCollisionPoint().DirectionTo(GlobalPosition);
 			float dist = rayCast.GetCollisionPoint().DistanceTo(GlobalPosition) / _innerRayCastLength - _radius;
 			var addition = dir * (1 - dist);
-			DebugDraw2D.SetText("addition", addition.Length());
+			// DebugDraw2D.SetText("addition", addition.Length());
 			totalForce += addition;
 			castsHit++;
 		}
 		if (castsHit != 0)
 			totalForce /= castsHit;
 		
-		DebugDraw2D.SetText("Force", totalForce.Length());
+		// DebugDraw2D.SetText("Force", totalForce.Length());
 		DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + totalForce * FlyUpSpeed, new Color(1, 0, 0), 0.1f);
 		
 		// ApplyForce(totalForce * FlyUpSpeed, Vector3.Zero);
