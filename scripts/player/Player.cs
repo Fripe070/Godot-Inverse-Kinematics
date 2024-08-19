@@ -5,16 +5,17 @@ namespace Kinematics.scripts.player;
 
 public partial class Player : CharacterBody3D
 {
+	[Export] private bool _shouldSurf = false; // Allow for source-like surfing. Not completely accurate since we're is based on q3, but close enough?
+	
 	[ExportGroup("Jumping")]
-	[Export] private float _jumpVelocity;  // m/s
+	[Export] private float _jumpVelocity = 7 ;  // m/s
 	[Export] private bool _allowHold = false;
 	[Export] private float _jumpBufferTime = 0; // seconds
 
 	[ExportGroup("Crouching")] 
-	[Export] private bool _quakeCrouch = true;
-	[Export] private float _quakeCrouchScale = 0.25f;
+	[Export] private float _crouchSpeedScale = 0.25f;
 	
-	[ExportGroup("Esoteric constants")] 
+	[ExportGroup("Esoteric settings")] 
 	// Most units are based on quake, going off of the assumption that 64 quake units is roughly 1.7 godot metres
 	[Export] private float _groundStopSpeed = 2.5f;  // m/s // Minimum velocity used when calculating ground friction.
 	[Export] private float _groundFriction = 6;  // m/s
@@ -73,8 +74,8 @@ public partial class Player : CharacterBody3D
 		var inputDir = TransformInput(GetInputDir());
 		float speed = inputDir.Length();
 		
-		if (_quakeCrouch && IsCrouched)
-			speed = Mathf.Min(Velocity.Length() * _quakeCrouchScale, speed);
+		if (IsCrouched)
+			speed = Mathf.Min(Velocity.Length() * _crouchSpeedScale, speed);
 
 		Accelerate(inputDir.Normalized() * speed, _groundAcceleration, delta);
 		// TODO: Write rest
@@ -94,14 +95,6 @@ public partial class Player : CharacterBody3D
 		accelSpeed = Mathf.Min(accelSpeed, addSpeed);
 		
 		Velocity += wishDir * accelSpeed;
-	}
-
-	private void StepSlideMove(double delta)
-	{
-		var newVel = Velocity;
-		newVel.Y -= _gravity * (float)delta;
-		Velocity = newVel;
-		MoveAndSlide();
 	}
 
 	private void ApplyFriction(double delta)
@@ -143,6 +136,14 @@ public partial class Player : CharacterBody3D
 		IsGrounded = IsOnFloor();
 	}
 
+	private void StepSlideMove(double delta)
+	{
+		var newVel = Velocity;
+		newVel.Y -= _gravity * (float)delta;
+		Velocity = newVel;
+		MoveAndSlide();
+	}
+
 	private Vector2 GetInputDir()
 	{
 		var dir = Input.GetVector("move_left", "move_right", "move_backward", "move_forward");
@@ -169,12 +170,16 @@ public partial class Player : CharacterBody3D
 		{
 			forwardVec = ClipVelocity(forwardVec, GetFloorNormal(), 1.001f);
 			rightVec = ClipVelocity(rightVec, GetFloorNormal(), 1.001f);
+		} else if (IsOnWall() && _shouldSurf)
+		{
+			forwardVec = ClipVelocity(forwardVec, GetWallNormal(), 1.001f);
+			rightVec = ClipVelocity(rightVec, GetWallNormal(), 1.001f);
 		}
 		forwardVec = forwardVec.Normalized();
 		rightVec = rightVec.Normalized();
 		
 		var vec = forwardVec * inputDir.Y + rightVec * inputDir.X;
-		return vec * 10;  // TODO: WHy is the player so slow if I dont add this? - I want movement values to be accurately scaled to their quake counterparts, and 10 is arbitrary here
+		return vec * 5;  // TODO: WHy is the player so slow if I dont add this? - I want movement values to be accurately scaled to their quake counterparts, and 10 is arbitrary here
 	}
 
 	private Vector3 ClipVelocity(Vector3 vec, Vector3 normal, float overBounce)

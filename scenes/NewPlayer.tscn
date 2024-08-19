@@ -7,8 +7,10 @@
 radius = 0.45
 
 [node name="NewPlayer" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_wltsb")
-_jumpVelocity = 10.0
+_shouldSurf = true
+_allowHold = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_pmjbe")
