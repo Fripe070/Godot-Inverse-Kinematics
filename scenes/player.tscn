@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://ct7nr7wjk575c"]
+[gd_scene load_steps=7 format=3 uid="uid://ct7nr7wjk575c"]
 
 [ext_resource type="Script" path="res://scripts/player/Player.cs" id="1_wltsb"]
 [ext_resource type="Script" path="res://scripts/player/LookController.cs" id="2_yfmsv"]
+[ext_resource type="Script" path="res://scripts/player/Swayer.cs" id="3_7khb8"]
 [ext_resource type="Script" path="res://scripts/player/NoClip.cs" id="3_y086f"]
 [ext_resource type="PackedScene" uid="uid://c7a48ojwrwh71" path="res://scenes/gui/Hud.tscn" id="4_tdq4d"]
 
@@ -26,7 +27,11 @@ _pitchPivot = NodePath("..")
 _yawPivot = NodePath("../..")
 _sensitivity = 10.0
 
-[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+[node name="Swayer" type="Node3D" parent="CameraPivot" node_paths=PackedStringArray("_player")]
+script = ExtResource("3_7khb8")
+_player = NodePath("../..")
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/Swayer"]
 fov = 90.0
 
 [node name="NoClip" type="Node" parent="." node_paths=PackedStringArray("_cameraTransform", "_playerController", "_colliders")]
@@ -36,3 +41,5 @@ _playerController = NodePath("..")
 _colliders = [NodePath("../CollisionShape3D")]
 
 [node name="Hud" parent="." instance=ExtResource("4_tdq4d")]
+
+[connection signal="Landed" from="." to="CameraPivot/Swayer" method="ResetOffset"]
