@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://ct7nr7wjk575c"]
+[gd_scene load_steps=9 format=3 uid="uid://ct7nr7wjk575c"]
 
 [ext_resource type="Script" path="res://scripts/player/Player.cs" id="1_wltsb"]
 [ext_resource type="Script" path="res://scripts/player/LookController.cs" id="2_yfmsv"]
 [ext_resource type="Script" path="res://scripts/player/Swayer.cs" id="3_7khb8"]
 [ext_resource type="Script" path="res://scripts/player/NoClip.cs" id="3_y086f"]
+[ext_resource type="Script" path="res://addons/smoothing/smoothing.gd" id="4_kaxjm"]
 [ext_resource type="PackedScene" uid="uid://c7a48ojwrwh71" path="res://scenes/gui/Hud.tscn" id="4_tdq4d"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pmjbe"]
@@ -18,11 +19,23 @@ script = ExtResource("1_wltsb")
 _shouldSurf = true
 _allowHold = true
 
+[node name="NoClip" type="Node" parent="." node_paths=PackedStringArray("_cameraTransform", "_playerController", "_colliders")]
+script = ExtResource("3_y086f")
+_cameraTransform = NodePath("../CameraPivot")
+_playerController = NodePath("..")
+_colliders = [NodePath("../CollisionShape3D")]
+
+[node name="Hud" parent="." instance=ExtResource("4_tdq4d")]
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_pmjbe")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Smoothing" type="Node3D" parent="."]
+script = ExtResource("4_kaxjm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Smoothing"]
 mesh = SubResource("CapsuleMesh_m88ww")
+skeleton = NodePath("../..")
 
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -39,11 +52,3 @@ _player = NodePath("../..")
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/Swayer"]
 fov = 90.0
-
-[node name="NoClip" type="Node" parent="." node_paths=PackedStringArray("_cameraTransform", "_playerController", "_colliders")]
-script = ExtResource("3_y086f")
-_cameraTransform = NodePath("../CameraPivot")
-_playerController = NodePath("..")
-_colliders = [NodePath("../CollisionShape3D")]
-
-[node name="Hud" parent="." instance=ExtResource("4_tdq4d")]
