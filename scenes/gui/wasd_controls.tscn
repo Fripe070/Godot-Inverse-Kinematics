@@ -7,46 +7,65 @@
 offset_right = 128.0
 offset_bottom = 134.0
 script = ExtResource("1_b1mvn")
-_wLabel = NodePath("Row 1/PanelContainer2/W Label")
-_aLabel = NodePath("Row 2/PanelContainer1/A Label")
-_sLabel = NodePath("Row 2/PanelContainer2/S Label")
-_dLabel = NodePath("Row 2/PanelContainer3/D Label")
-_spaceLabel = NodePath("Row 3/PanelContainer1/Space Label")
-_leftClickLabel = NodePath("Row 1/PanelContainer1/ML Label")
-_rightClickLabel = NodePath("Row 1/PanelContainer3/MR Label")
+_wLabel = NodePath("Row 1/ColorRect2/W Label")
+_aLabel = NodePath("Row 2/ColorRect3/A Label")
+_sLabel = NodePath("Row 2/ColorRect4/S Label")
+_dLabel = NodePath("Row 2/ColorRect5/D Label")
+_spaceLabel = NodePath("ColorRect3/Space Label")
+_leftClickLabel = NodePath("Row 1/ColorRect/ML Label")
+_rightClickLabel = NodePath("Row 1/ColorRect3/MR Label")
 
 [node name="Row 1" type="HBoxContainer" parent="."]
 layout_mode = 2
+theme_override_constants/separation = 5
 alignment = 1
 
-[node name="PanelContainer1" type="PanelContainer" parent="Row 1"]
+[node name="ColorRect" type="ColorRect" parent="Row 1"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+color = Color(0.129558, 0.129558, 0.129558, 1)
 
-[node name="ML Label" type="Label" parent="Row 1/PanelContainer1"]
-layout_mode = 2
+[node name="ML Label" type="Label" parent="Row 1/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "L"
 label_settings = ExtResource("2_pr00d")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer2" type="PanelContainer" parent="Row 1"]
+[node name="ColorRect2" type="ColorRect" parent="Row 1"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+color = Color(0.129558, 0.129558, 0.129558, 1)
 
-[node name="W Label" type="Label" parent="Row 1/PanelContainer2"]
-layout_mode = 2
+[node name="W Label" type="Label" parent="Row 1/ColorRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "W"
 label_settings = ExtResource("2_pr00d")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer3" type="PanelContainer" parent="Row 1"]
+[node name="ColorRect3" type="ColorRect" parent="Row 1"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+color = Color(0.129558, 0.129558, 0.129558, 1)
 
-[node name="MR Label" type="Label" parent="Row 1/PanelContainer3"]
-layout_mode = 2
+[node name="MR Label" type="Label" parent="Row 1/ColorRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "R"
 label_settings = ExtResource("2_pr00d")
 horizontal_alignment = 1
@@ -54,51 +73,72 @@ vertical_alignment = 1
 
 [node name="Row 2" type="HBoxContainer" parent="."]
 layout_mode = 2
+theme_override_constants/separation = 5
 alignment = 1
 
-[node name="PanelContainer1" type="PanelContainer" parent="Row 2"]
+[node name="ColorRect3" type="ColorRect" parent="Row 2"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+color = Color(0.129558, 0.129558, 0.129558, 1)
 
-[node name="A Label" type="Label" parent="Row 2/PanelContainer1"]
-layout_mode = 2
+[node name="A Label" type="Label" parent="Row 2/ColorRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "A"
 label_settings = ExtResource("2_pr00d")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer2" type="PanelContainer" parent="Row 2"]
+[node name="ColorRect4" type="ColorRect" parent="Row 2"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+color = Color(0.129558, 0.129558, 0.129558, 1)
 
-[node name="S Label" type="Label" parent="Row 2/PanelContainer2"]
-layout_mode = 2
+[node name="S Label" type="Label" parent="Row 2/ColorRect4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "S"
 label_settings = ExtResource("2_pr00d")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer3" type="PanelContainer" parent="Row 2"]
+[node name="ColorRect5" type="ColorRect" parent="Row 2"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+color = Color(0.129558, 0.129558, 0.129558, 1)
 
-[node name="D Label" type="Label" parent="Row 2/PanelContainer3"]
-layout_mode = 2
+[node name="D Label" type="Label" parent="Row 2/ColorRect5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "D"
 label_settings = ExtResource("2_pr00d")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Row 3" type="HBoxContainer" parent="."]
+[node name="ColorRect3" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-alignment = 1
+color = Color(0.129558, 0.129558, 0.129558, 1)
 
-[node name="PanelContainer1" type="PanelContainer" parent="Row 3"]
-custom_minimum_size = Vector2(120, 40)
-layout_mode = 2
-
-[node name="Space Label" type="Label" parent="Row 3/PanelContainer1"]
-layout_mode = 2
+[node name="Space Label" type="Label" parent="ColorRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "Space"
 label_settings = ExtResource("2_pr00d")
 horizontal_alignment = 1
