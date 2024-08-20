@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ct7nr7wjk575c"]
+[gd_scene load_steps=8 format=3 uid="uid://ct7nr7wjk575c"]
 
 [ext_resource type="Script" path="res://scripts/player/Player.cs" id="1_wltsb"]
 [ext_resource type="Script" path="res://scripts/player/LookController.cs" id="2_yfmsv"]
@@ -9,6 +9,9 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pmjbe"]
 radius = 0.45
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_m88ww"]
+radius = 0.45
+
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_wltsb")
@@ -17,6 +20,9 @@ _allowHold = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_pmjbe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_m88ww")
 
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
