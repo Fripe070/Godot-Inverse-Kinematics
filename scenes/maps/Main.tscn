@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://5o1x2u3d0nfv"]
+[gd_scene load_steps=17 format=3 uid="uid://5o1x2u3d0nfv"]
 
 [ext_resource type="Texture2D" uid="uid://c34x6l7lgfgsb" path="res://assets/textures/dev/kenney_prototype_dark_grid.png" id="1_2nkws"]
 [ext_resource type="PackedScene" uid="uid://ct7nr7wjk575c" path="res://scenes/player.tscn" id="2_d5ayq"]
@@ -38,6 +38,10 @@ data = PackedVector3Array(0, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0, 0.5, 
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_bsldr"]
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qlgb1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j74f8"]
 
 [node name="Node3D" type="Node3D"]
 
@@ -118,10 +122,42 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Static/MeshInstance3D5/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_bsldr")
 
-[node name="NewPlayer" parent="." instance=ExtResource("2_d5ayq")]
-_groundStopSpeed = 24.645
-_groundFriction = 1.0
-_airAccelerationScalar = 1000.0
+[node name="RampSlide" type="Node3D" parent="Static"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63.9982, -1.90735e-06, 54.7626)
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Static/RampSlide"]
+transform = Transform3D(4.03607, 0, 0, 0, 2.97835, 0, 0, 0, 55.4845, 0, 0, 0)
+mesh = SubResource("BoxMesh_qlgb1")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Static/RampSlide/MeshInstance3D7"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static/RampSlide/MeshInstance3D7/StaticBody3D"]
+shape = SubResource("BoxShape3D_j74f8")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="Static/RampSlide"]
+transform = Transform3D(-4.75217, 0.34143, 0, -1.72627, -0.939907, 0, 0, 0, 7.929, -4.25331, 0.16451, 22.3342)
+mesh = SubResource("BoxMesh_qlgb1")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Static/RampSlide/MeshInstance3D8"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static/RampSlide/MeshInstance3D8/StaticBody3D"]
+shape = SubResource("BoxShape3D_j74f8")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="Static/RampSlide"]
+transform = Transform3D(-4.75109, -0.34202, 0, 1.72925, -0.939693, 0, 0, 0, 7.929, 4.253, 0.165, -20.8055)
+mesh = SubResource("BoxMesh_qlgb1")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Static/RampSlide/MeshInstance3D9"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static/RampSlide/MeshInstance3D9/StaticBody3D"]
+shape = SubResource("BoxShape3D_j74f8")
+
+[node name="Player" parent="." instance=ExtResource("2_d5ayq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.8479, 1, 31.6692)
+_airAccelerationScalar = 100.0
 
 [node name="Limb" parent="." instance=ExtResource("3_cnnuw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.4098, 0.303925, -10.095)

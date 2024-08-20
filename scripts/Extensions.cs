@@ -14,4 +14,9 @@ public static class Extensions
     {
         return (vec - pivot).Rotated(axis, angle) + pivot;
     }
+
+    public static Vector3 ToFlat3D(this Vector2 vec)
+    {
+        return new Vector3(vec.X, 0, vec.Y);
+    }
 }

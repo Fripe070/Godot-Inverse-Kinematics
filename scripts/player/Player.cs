@@ -70,7 +70,7 @@ public partial class Player : CharacterBody3D
 		else
 			AirMove(delta);
 		
-		// DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
+		DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
 	}
 
 	private void AirMove(double delta)
@@ -78,10 +78,18 @@ public partial class Player : CharacterBody3D
 		DebugDraw2D.SetText("Mode", "Air");
 		ApplyFriction(delta);
 
-		var inputDir = TransformInput(GetInputDir());
-		Accelerate(inputDir, _airAccelerationScalar, delta);
+		var forwardVec = -Transform.Basis.Z.WithY(0).Normalized();
+		var rightVec = Transform.Basis.X.WithY(0).Normalized();
+		var input2D = GetInputDir();
+		// wishVel.normalised() = wishdir
+		// wishVel.Length() = wishspeed
+		var wishVel = forwardVec * input2D.Y + rightVec * input2D.X;
+		// wishVel = wishVel.WithY(0);  // I don't think this ever does anything? But in the spirit of being true to... source, I'm keeping it here
+		
+		Accelerate(wishVel, _airAccelerationScalar, delta);
+		
 		// TODO: Write rest
-		StepSlideMove(delta);
+		StepSlideMove(delta, true);
 	}
 
 	private void GroundMove(double delta)
@@ -95,16 +103,26 @@ public partial class Player : CharacterBody3D
 		
 		ApplyFriction(delta);
 
-		// normalised = wishdir, length = wishspeed
-		var inputDir = TransformInput(GetInputDir());
-		float speed = inputDir.Length();
+		var forwardVec = -Transform.Basis.Z.WithY(0);
+		var rightVec = Transform.Basis.X.WithY(0);
+		forwardVec = ClipVelocity(forwardVec, GetFloorNormal(), _overBounce).Normalized();
+		rightVec = ClipVelocity(rightVec, GetFloorNormal(), _overBounce).Normalized();
+		
+		var input2D = GetInputDir();
+		// wishVel.normalised() = wishdir
+		// wishVel.Length() = wishspeed
+		var wishVel = forwardVec * input2D.Y + rightVec * input2D.X;
+		float speed = wishVel.Length();
 		
 		if (IsCrouched)
 			speed = Mathf.Min(Velocity.Length() * _crouchSpeedScale, speed);
 
-		Accelerate(inputDir.Normalized() * speed, _groundAccelerationScalar, delta);
+		Accelerate(wishVel.Normalized() * speed, _groundAccelerationScalar, delta);
+		// Clip without losing speed
+		Velocity = ClipVelocity(Velocity, GetFloorNormal(), _overBounce).Normalized() * Velocity.Length();
+		
 		// TODO: Write rest
-		StepSlideMove(delta);
+		StepSlideMove(delta, false);
 	}
 
 	private void Accelerate(Vector3 wishVel, float accel, double delta)
@@ -168,18 +186,27 @@ public partial class Player : CharacterBody3D
 		// This method will also be used for detecting the material we're walking on and whatever later
 		bool newGrounded = IsOnFloor();
 		if (Velocity.Y > _rampSlideThreshold)
+		{
 			newGrounded = false;
+		}
 		
 		if (!IsGrounded && newGrounded)
 			EmitSignal(SignalName.Landed);
 		IsGrounded = newGrounded;
 	}
 
-	private void StepSlideMove(double delta)
+	private void StepSlideMove(double delta, bool applyGravity)
 	{
-		var newVel = Velocity;
-		newVel.Y -= Gravity * (float)delta;
-		Velocity = newVel;
+		if (applyGravity)
+		{
+			Velocity = new Vector3(Velocity.X, Velocity.Y - Gravity * (float)delta, Velocity.Z);
+			
+			if (IsGrounded) 
+				Velocity = ClipVelocity(Velocity, GetFloorNormal(), _overBounce);
+			else if (IsOnWall() && _shouldSurf)
+				Velocity = ClipVelocity(Velocity, GetWallNormal(), _overBounce);
+		}
+		
 		MoveAndSlide();
 	}
 
@@ -199,28 +226,6 @@ public partial class Player : CharacterBody3D
 		else
 			dir.X *= _moveDirScalar.W;  // Right
 		return dir;
-	}
-
-	private Vector3 TransformInput(Vector2 inputVec)
-	{
-		var forwardVec = -Transform.Basis.Z;
-		var rightVec = Transform.Basis.X;
-		forwardVec.Y = rightVec.Y = 0;
-
-		if (IsGrounded)
-		{
-			forwardVec = ClipVelocity(forwardVec, GetFloorNormal(), _overBounce);
-			rightVec = ClipVelocity(rightVec, GetFloorNormal(), _overBounce);
-		} else if (IsOnWall() && _shouldSurf)
-		{
-			forwardVec = ClipVelocity(forwardVec, GetWallNormal(), _overBounce);
-			rightVec = ClipVelocity(rightVec, GetWallNormal(), _overBounce);
-		}
-		forwardVec = forwardVec.Normalized();
-		rightVec = rightVec.Normalized();
-		
-		var vec = forwardVec * inputVec.Y + rightVec * inputVec.X;
-		return vec;
 	}
 
 	private Vector3 ClipVelocity(Vector3 vec, Vector3 normal, float overBounce)
