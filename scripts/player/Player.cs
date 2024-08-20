@@ -84,7 +84,7 @@ public partial class Player : CharacterBody3D
 		// wishVel.normalised() = wishdir
 		// wishVel.Length() = wishspeed
 		var wishVel = forwardVec * input2D.Y + rightVec * input2D.X;
-		// wishVel = wishVel.WithY(0);  // I don't think this ever does anything? But in the spirit of being true to... source, I'm keeping it here
+		wishVel = wishVel.WithY(0);  // I don't think this ever does anything? But in the spirit of being true to... source, I'm keeping it here
 		
 		Accelerate(wishVel, _airAccelerationScalar, delta);
 		
