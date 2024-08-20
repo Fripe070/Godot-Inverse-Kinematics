@@ -70,8 +70,7 @@ public partial class Player : CharacterBody3D
 		else
 			AirMove(delta);
 		
-		DebugDraw3D.DrawSphere(GlobalPosition, 0.05f, Colors.Burlywood);
-		// DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
+		DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
 	}
 
 	private void AirMove(double delta)
