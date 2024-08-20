@@ -6,6 +6,9 @@ namespace Kinematics.scripts.player;
 public partial class Swayer : Node3D
 {
 	[Export] private Player _player;
+	[Export] private bool _enableSway;
+	[Export] private bool _enableBob;
+	
 	[Export] private float _stepAmplitude = 0.05f;
 	[Export] private float _stepFrequency = 4f;
 	[Export] private float _tiltDegPerMPerS = 5f / 15f;
@@ -18,8 +21,10 @@ public partial class Swayer : Node3D
 
 	public override void _Process(double delta)
 	{
-		Sway(delta);
-		ViewBob(delta);
+		if (_enableSway)
+			Sway(delta);
+		if (_enableBob)
+			ViewBob(delta);
 	}
 
 	private void Sway(double delta)

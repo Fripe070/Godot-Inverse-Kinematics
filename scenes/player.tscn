@@ -47,5 +47,3 @@ _playerController = NodePath("..")
 _colliders = [NodePath("../CollisionShape3D")]
 
 [node name="Hud" parent="." instance=ExtResource("4_tdq4d")]
-
-[connection signal="Landed" from="." to="CameraPivot/Swayer" method="ResetOffset"]
