@@ -52,7 +52,6 @@ public partial class Player : CharacterBody3D
 	[Signal] public delegate void LandedEventHandler();
 
 	// TODO: Stairs :skull:
-	// TODO: Don't seem to be launching off of slopes like I want? Ramp-sliding doesn't quite work...
 	public override void _PhysicsProcess(double delta)
 	{
 		DebugDraw2D.SetText("Velocity (var)", Velocity);
