@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://ct7nr7wjk575c"]
+[gd_scene load_steps=9 format=3 uid="uid://ct7nr7wjk575c"]
 
 [ext_resource type="Script" path="res://scripts/player/Player.cs" id="1_wltsb"]
 [ext_resource type="Script" path="res://scripts/player/LookController.cs" id="2_yfmsv"]
 [ext_resource type="Script" path="res://scripts/player/Swayer.cs" id="3_7khb8"]
 [ext_resource type="Script" path="res://scripts/player/NoClip.cs" id="3_y086f"]
 [ext_resource type="PackedScene" uid="uid://c7a48ojwrwh71" path="res://scenes/gui/Hud.tscn" id="4_tdq4d"]
+[ext_resource type="Script" path="res://scripts/player/GrappleGun.cs" id="4_v3j1f"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pmjbe"]
 radius = 0.45
@@ -15,8 +16,8 @@ radius = 0.45
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_wltsb")
-_shouldSurf = true
 _allowHold = true
+_shouldSurf = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_pmjbe")
@@ -39,6 +40,12 @@ _player = NodePath("../..")
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/Swayer"]
 fov = 90.0
+
+[node name="GrappleGun" type="RayCast3D" parent="CameraPivot/Swayer/Camera3D" node_paths=PackedStringArray("_player", "_cameraTransform")]
+target_position = Vector3(0, 0, -8)
+script = ExtResource("4_v3j1f")
+_player = NodePath("../../../..")
+_cameraTransform = NodePath("../../..")
 
 [node name="NoClip" type="Node" parent="." node_paths=PackedStringArray("_cameraTransform", "_playerController", "_colliders")]
 script = ExtResource("3_y086f")

@@ -14,8 +14,6 @@ enum JumpMode
 
 public partial class Player : CharacterBody3D
 {
-	[Export] private bool _shouldSurf = false; // Allow for source-like surfing. Not completely accurate since we're is based on q3, but close enough?
-	
 	[ExportGroup("Jumping")]
 	[Export] private JumpMode _jumpMode = JumpMode.Set;
 	[Export] private float _jumpVelocity = 7 ;  // m/s
@@ -38,15 +36,16 @@ public partial class Player : CharacterBody3D
 	[Export] private float _gravityStrength = 21.25f;
 	[Export] private float _overBounce = 1.001f;
 	[Export] private float _rampSlideThreshold = 4.8f;  // m/s upwards
+	[Export] private bool _shouldSurf = false; // Allow for source-like surfing. Maybe not completely accurate since the rest is based on q3, but close enough?
 	
 	private float _godotGravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-	private float Gravity => _useGodotGravity ? _godotGravity : _gravityStrength;
+	public float Gravity => _useGodotGravity ? _godotGravity : _gravityStrength;
 	
 	// State
 	public bool IsGrounded { get; private set; }
 	public bool IsCrouched { get; private set; }
 	private double _triedJumpAgo = 0;
-	public bool IsDisabled = false;
+	public bool IsDisabled = false;  // TODO: I should probably use a state machine and make this private...
 	
 	[Signal] public delegate void JumpedEventHandler();
 	[Signal] public delegate void LandedEventHandler();
@@ -54,8 +53,8 @@ public partial class Player : CharacterBody3D
 	// TODO: Stairs :skull:
 	public override void _PhysicsProcess(double delta)
 	{
-		DebugDraw2D.SetText("Velocity (var)", Velocity);
-		DebugDraw2D.SetText("Velocity (Y)", Velocity.Y);
+		// DebugDraw2D.SetText("Velocity (var)", Velocity);
+		// DebugDraw2D.SetText("Velocity (Y)", Velocity.Y);
 		if (IsDisabled) return;
 		
 		if (Input.IsActionPressed("jump") || (_allowHold && Input.IsActionPressed("jump")))
@@ -69,7 +68,7 @@ public partial class Player : CharacterBody3D
 		else
 			AirMove(delta);
 		
-		DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
+		// DebugDraw3D.DrawArrow(GlobalPosition, GlobalPosition + Velocity, Colors.Aqua, 0.1f);
 	}
 
 	private void AirMove(double delta)
@@ -88,7 +87,7 @@ public partial class Player : CharacterBody3D
 		Accelerate(wishVel, _airAccelerationScalar, delta);
 		
 		// TODO: Write rest
-		StepSlideMove(delta, true);
+		SlideMove(delta, true);
 	}
 
 	private void GroundMove(double delta)
@@ -121,7 +120,7 @@ public partial class Player : CharacterBody3D
 		Velocity = ClipVelocity(Velocity, GetFloorNormal(), _overBounce).Normalized() * Velocity.Length();
 		
 		// TODO: Write rest
-		StepSlideMove(delta, false);
+		SlideMove(delta, false);
 	}
 
 	private void Accelerate(Vector3 wishVel, float accel, double delta)
@@ -194,11 +193,11 @@ public partial class Player : CharacterBody3D
 		IsGrounded = newGrounded;
 	}
 
-	private void StepSlideMove(double delta, bool applyGravity)
+	private void SlideMove(double delta, bool applyGravity)
 	{
 		if (applyGravity)
 		{
-			Velocity = new Vector3(Velocity.X, Velocity.Y - Gravity * (float)delta, Velocity.Z);
+			Velocity += Vector3.Down * Gravity * (float)delta;
 			
 			if (IsGrounded) 
 				Velocity = ClipVelocity(Velocity, GetFloorNormal(), _overBounce);

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://27ran3sgymu6"]
+
+[ext_resource type="Script" path="res://scripts/player/GrappleHook.cs" id="1_iekeq"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ekk1n"]
+flip_faces = true
+
+[node name="GrappleHook" type="Node3D"]
+script = ExtResource("1_iekeq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_ekk1n")
