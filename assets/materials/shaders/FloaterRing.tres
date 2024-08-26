@@ -69,7 +69,7 @@ render_mode blend_mix, depth_draw_opaque, cull_disabled, diffuse_lambert, specul
 
 
 // Varyings
-varying vec3 world_pos;
+varying vec3 var_world_pos;
 
 uniform sampler2D tex_frg_20;
 uniform sampler2D tex_frg_14;
@@ -87,7 +87,7 @@ void vertex() {
 
 
 // VaryingSetter:5
-	world_pos = n_out4p0;
+	var_world_pos = n_out4p0;
 
 
 }

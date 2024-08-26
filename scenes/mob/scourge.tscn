@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://cjxxv5hedgyn1"]
+
+[ext_resource type="Script" path="res://scripts/creature/Scourge/Scourge.cs" id="1_ievpc"]
+[ext_resource type="Script" path="res://scripts/creature/Scourge/Tail.cs" id="2_t4t74"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v0nkr"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_qbnlw"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_g6o0a"]
+radius = 0.35
+height = 0.7
+
+[node name="Scourge" type="CharacterBody3D"]
+script = ExtResource("1_ievpc")
+_movementAccel = 200.0
+_maxSpeed = 20.0
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_v0nkr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_qbnlw")
+
+[node name="TailRenderer" type="Node3D" parent="."]
+script = ExtResource("2_t4t74")
+_mesh = SubResource("SphereMesh_g6o0a")
+_segmentCount = 20

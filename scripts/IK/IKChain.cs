@@ -66,7 +66,7 @@ public class IKChain
         return Error;
     }
     
-    private void FabrikForward(Vector3 target)
+    public void FabrikForward(Vector3 target)
     {
         Segments[^1].TipPosition = target;
         for (int i = Segments.Length - 2; i >= 0; i--)
@@ -78,7 +78,7 @@ public class IKChain
         }
     }
     
-    private void FabrikBackward()
+    public void FabrikBackward()
     {
         for (var i = 0; i < Segments.Length; i++)
         {
